@@ -65,3 +65,15 @@ jobs:
       # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+  upload-artifact:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ExaltedDice-1.0.jar
+          path: /build/libs/
+      - name: Upload Artifact
