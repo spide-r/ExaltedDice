@@ -75,5 +75,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ExaltedDice-1.0.jar
-          path: /build/libs/
+          path: build/libs/
       - name: Upload Artifact
