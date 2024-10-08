@@ -2,7 +2,7 @@ package me.spider.dice;
 
 public class Die {
     private int value;
-    private int successThreshold;
+    private final int successThreshold;
     public Die(int value, int successThreshold){
         this.value = value;
         this.successThreshold = successThreshold;
@@ -18,9 +18,5 @@ public class Die {
 
     public boolean doubleSuccess(){
         return value == 10;
-    }
-
-    public void setSuccess(){
-        value = successThreshold + 1;
     }
 }

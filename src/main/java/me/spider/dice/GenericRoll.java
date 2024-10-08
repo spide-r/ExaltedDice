@@ -1,7 +1,5 @@
 package me.spider.dice;
 
-import me.spider.Main;
-
 import java.util.ArrayList;
 
 public class GenericRoll {
