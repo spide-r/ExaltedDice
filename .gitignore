@@ -44,3 +44,4 @@ bin/
 .TOKEN
 .idea
 /.idea/
+/exalted.db

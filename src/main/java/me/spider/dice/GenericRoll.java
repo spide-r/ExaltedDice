@@ -1,5 +1,7 @@
 package me.spider.dice;
 
+import me.spider.Constants;
+
 import java.util.ArrayList;
 
 public class GenericRoll {
@@ -8,16 +10,20 @@ public class GenericRoll {
     // return 2 successes on each 10
     ArrayList<Die> dice = new ArrayList<>();
     boolean tensAreOneHit;
+    boolean modifiesEssence;
     String label;
     int autoSuccesses;
-    public GenericRoll(int amt, int autoSuccesses, int successThreshold, boolean tensAreOneHit, String label){
+    int successThreshold;
+    public GenericRoll(int amt, int autoSuccesses, int successThreshold, boolean tensAreOneHit, String label, boolean modifiesEssence){
         for (int i = 0; i < amt; i++) {
             Die d = new Die(Roller.rollDie(), successThreshold);
             dice.add(d);
         }
         this.autoSuccesses = autoSuccesses;
         this.tensAreOneHit = tensAreOneHit;
+        this.successThreshold = successThreshold;
         this.label = label;
+        this.modifiesEssence = modifiesEssence;
     }
 
 
@@ -64,7 +70,12 @@ public class GenericRoll {
         String hitStr = hits + ((autoSuccesses > 0) ? " + " + autoSuccesses + " :star: **" + finalHits +"** :star:" : "");
         String label = getLabel();
 
-        return ":pencil: " + label + ":\n:game_die: " + rolls + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
+        String thresholdChanged = "";
+        if(this.successThreshold != Constants.SUCCESS_THRESHOLD){
+         thresholdChanged = "\n### :white_check_mark: Success Threshold: {" + this.successThreshold + "}";
+        }
+
+        return ":pencil: " + label + ":\n:game_die: " + rolls + " " + thresholdChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
     }
 
     public boolean isBotch(){

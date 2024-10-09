@@ -9,7 +9,7 @@ public class Die {
     }
 
     public boolean success(){
-        return value > successThreshold;
+        return value >= successThreshold;
     }
 
     public int getValue(){

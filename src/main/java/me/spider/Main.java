@@ -1,7 +1,7 @@
 package me.spider;
 
+import me.spider.db.JDBCManager;
 import me.spider.dice.Roller;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Main {
     public static Roller roller;
-
+    public static JDBCManager jdbcManager;
     public static void main(String[] args) {
         System.out.println("Hello world!");
         try {
@@ -20,6 +20,7 @@ public class Main {
                     .addEventListeners(new BotEventListener())
                     .build();
             roller = new Roller();
+            jdbcManager = new JDBCManager();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
