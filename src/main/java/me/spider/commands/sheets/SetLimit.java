@@ -16,7 +16,7 @@ public class SetLimit extends GenericCommand {
         }
         String serverID = event.getGuild().getId();
         String userID = event.getUser().getId();
-        int limit = event.getOption("limitbreak", Constants.LIMIT_BREAK, OptionMapping::getAsInt);
+        int limit = event.getOption("value", Constants.LIMIT_BREAK, OptionMapping::getAsInt);
         try {
             Main.jdbcManager.setLimit(serverID, userID, limit);
             event.reply("Your limit is now: " + limit).queue();

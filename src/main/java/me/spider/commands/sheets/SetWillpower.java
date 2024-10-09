@@ -16,7 +16,7 @@ public class SetWillpower extends GenericCommand {
         }
         String serverID = event.getGuild().getId();
         String userID = event.getUser().getId();
-        int willpower = event.getOption("willpower", Constants.WILLPOWER, OptionMapping::getAsInt);
+        int willpower = event.getOption("value", Constants.WILLPOWER, OptionMapping::getAsInt);
         try {
             Main.jdbcManager.setWillpower(serverID, userID, willpower);
             event.reply("Your willpower is now: " + willpower).queue();
