@@ -10,11 +10,11 @@ public class GenericRoll {
     // return 2 successes on each 10
     ArrayList<Die> dice = new ArrayList<>();
     boolean tensAreOneHit;
-    boolean modifiesEssence;
+    boolean privateRoll;
     String label;
     int autoSuccesses;
     int successThreshold;
-    public GenericRoll(int amt, int autoSuccesses, int successThreshold, boolean tensAreOneHit, String label, boolean modifiesEssence){
+    public GenericRoll(int amt, int autoSuccesses, int successThreshold, boolean tensAreOneHit, String label, boolean privateRoll){
         for (int i = 0; i < amt; i++) {
             Die d = new Die(Roller.rollDie(), successThreshold);
             dice.add(d);
@@ -23,7 +23,7 @@ public class GenericRoll {
         this.tensAreOneHit = tensAreOneHit;
         this.successThreshold = successThreshold;
         this.label = label;
-        this.modifiesEssence = modifiesEssence;
+        this.privateRoll = privateRoll;
     }
 
 
@@ -75,7 +75,7 @@ public class GenericRoll {
          thresholdChanged = "\n### :white_check_mark: Success Threshold: {" + this.successThreshold + "}";
         }
 
-        return ":pencil: " + label + ":\n:game_die: " + rolls + " " + thresholdChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
+        return ((privateRoll) ? ":ghost: " : "pencil ")+ label + ":\n:game_die: " + rolls + " " + thresholdChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
     }
 
     public boolean isBotch(){

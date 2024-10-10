@@ -6,6 +6,7 @@ public class Constants {
     public static final int SUCCESSES = 0; // Minimum Guaranteed Successes if not specified
     public static final String DEFAULT_LABEL = "Roll"; // Minimum Guaranteed Successes if not specified
     public static final boolean ESSENCE_MODIFIED = false; // Does a dice roll modify essence?
+    public static final boolean PRIVATE_ROLL = false;
     public static final int LIMIT_BREAK = 0; // Default limit break amount
     public static final int WILLPOWER = 5; // Default willpower amount
     public static final int ESSENCE = 0; // Default essence amount

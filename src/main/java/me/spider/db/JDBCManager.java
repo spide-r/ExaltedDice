@@ -60,6 +60,35 @@ public class JDBCManager {
         }
         return motes;
     }
+
+    public void setAllEssences(String serverID, String userID, HashMap<String, Integer> essences) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO characters (serverID,userID,personalMotes, personalMax, peripheralMotes, peripheralMax, otherMotes,otherMax) VALUES (?,?,?,?,?,?,?,?) " +
+                        "ON CONFLICT(serverID,userID) DO UPDATE SET personalMotes = ?, personalMax = ?, peripheralMotes = ?, peripheralMax = ?, otherMotes = ?, otherMax = ? ");
+        int personalMotes = essences.get("personalMotes");
+        int personalMax = essences.get("personalMax");
+        int peripheralMotes = essences.get("peripheralMotes");
+        int peripheralMax = essences.get("peripheralMax");
+        int otherMotes = essences.get("otherMotes");
+        int otherMax = essences.get("otherMax");
+        preparedStatement.setString(1, serverID);
+        preparedStatement.setString(2, userID);
+        preparedStatement.setInt(3, personalMotes);
+        preparedStatement.setInt(4, personalMax);
+        preparedStatement.setInt(5, peripheralMotes);
+        preparedStatement.setInt(6, peripheralMax);
+        preparedStatement.setInt(7, otherMotes);
+        preparedStatement.setInt(8, otherMax);
+
+        preparedStatement.setInt(9, personalMotes);
+        preparedStatement.setInt(10, personalMax);
+        preparedStatement.setInt(11, peripheralMotes);
+        preparedStatement.setInt(12, peripheralMax);
+        preparedStatement.setInt(13, otherMotes);
+        preparedStatement.setInt(14, otherMax);
+        preparedStatement.executeUpdate();
+
+    }
     public HashMap<String, Integer> getEssenseMoteAndMax(String serverID, String userID, String name) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT ? , ? FROM characters WHERE serverID = ? AND userID = ?");
         preparedStatement.setString(1, name + "Motes");
