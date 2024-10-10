@@ -13,6 +13,9 @@ public class ModifyEssenceDropdown {
                         SelectOption.of("otherMax", "Max Other Motes")).build()
         ).addActionRow(TextInput.create("essence-amount", "Chose the amount to modify", TextInputStyle.SHORT).build()).queue();
 
+//todo textinput doesnt work for replying to messages
+
+
                             @Override
     public void OnStringSelectInteraction(StringSelectInteractionEvent event) {
         if(event.getComponentId().equals("choose-essence")){
