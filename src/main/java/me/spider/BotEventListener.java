@@ -40,7 +40,7 @@ public class BotEventListener extends ListenerAdapter {
                             .addOption(OptionType.STRING, "label", "Describe what this dice roll is for", false, false)
                             .addOption(OptionType.INTEGER, "successes", "Amount of Automatic Successes", false, false)
                             .addOption(OptionType.INTEGER, "threshold", "If the success threshold needs to be changed, change it here.", false, false)
-                            .addOption(OptionType.INTEGER, "essence", "If the dice roll will modify your essence.", false, false)
+                            .addOption(OptionType.INTEGER, "essencemodification", "If the dice roll will modify your essence.", false, false)
                             .addOption(OptionType.BOOLEAN, "private", "If the dice roll should be shown only to you.", false, false),
 
                     Commands.slash("damageroll", "Rolls The Dice - 10's count as 1 success")
@@ -48,7 +48,7 @@ public class BotEventListener extends ListenerAdapter {
                             .addOption(OptionType.STRING, "label", "Describe what this dice roll is for", false, false)
                             .addOption(OptionType.INTEGER, "successes", "Amount of Automatic Successes", false, false)
                             .addOption(OptionType.INTEGER, "threshold", "If the success threshold needs to be changed, change it here.", false, false)
-                            .addOption(OptionType.INTEGER, "essence", "If the dice roll will modify your essence, change it here.", false, false)
+                            .addOption(OptionType.INTEGER, "essencemodification", "If the dice roll will modify your essence, change it here.", false, false)
                             .addOption(OptionType.BOOLEAN, "private", "If the dice roll should be shown only to you.", false, false),
                     Commands.slash("getessences", "Gets a list of all essence motes attached to you."),
                     Commands.slash("getlimit", "Shows your limit break."),
@@ -104,7 +104,7 @@ public class BotEventListener extends ListenerAdapter {
         int successes = event.getOption("successes", Constants.SUCCESSES, OptionMapping::getAsInt);
         int threshold = event.getOption("threshold", Constants.SUCCESS_THRESHOLD, OptionMapping::getAsInt);
         String label = event.getOption("label", Constants.DEFAULT_LABEL, OptionMapping::getAsString);
-        int essenceAmount = event.getOption("essence", Constants.ESSENCE, OptionMapping::getAsInt);
+        int essenceAmount = event.getOption("essencemodification", Constants.ESSENCE, OptionMapping::getAsInt);
         boolean privateRoll = event.getOption("private",Constants.PRIVATE_ROLL, OptionMapping::getAsBoolean);
 
         boolean modifiesEssence = essenceAmount != 0;
