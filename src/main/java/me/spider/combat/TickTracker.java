@@ -1,5 +1,7 @@
 package me.spider.combat;
 
+import com.sun.source.tree.Tree;
+
 import java.util.*;
 
 public class TickTracker {
@@ -48,21 +50,22 @@ And then I suppose a command to remove specific people from the tracker (like wh
         });
     }
 
-    public void delay(int amount, String actor){
+    public int delay(int amount, String actor){
         int actionTick = amount + currentTick;
         addToTick(actionTick, actor);
+        return actionTick;
     }
 
     public void addToTick(int tick, String actor){
         addParticipant(tick, actor, tickList);
     }
 
-    public boolean advanceTicks(){
+    public int advanceTicks(){
         if(tickList.ceilingKey(currentTick + 1) == null){
-            return false;
+            return -1;
         }
         currentTick = tickList.ceilingKey(currentTick + 1);
-        return true;
+        return currentTick;
     }
 
     public HashSet<String> getTickActorsAt(int tick){
@@ -73,6 +76,28 @@ And then I suppose a command to remove specific people from the tracker (like wh
         return getTickActorsAt(currentTick);
     }*/
 
+
+    public TreeMap<Integer, HashSet<String>> getNextSixTicks(){
+        TreeMap<Integer, HashSet<String>> nextSixTicks = new TreeMap<>();
+        for (int i = currentTick+1; i < currentTick+7 ; i++) {
+            if(tickList.get(i) == null){
+                nextSixTicks.put(i, new HashSet<>());
+            } else {
+                nextSixTicks.put(i, tickList.get(i));
+            }
+        }
+        return nextSixTicks;
+    }
+
+    public HashMap<String, Integer> getAllActorsNextTick(){
+        HashMap<String, Integer> actorsAndTicks = new HashMap<>();
+        tickList.tailMap(currentTick).forEach((tick, actors) -> {
+            actors.forEach(actor -> {
+                actorsAndTicks.putIfAbsent(actor, tick);
+            });
+        });
+        return actorsAndTicks;
+    }
 
     public boolean joinCombat(String actor, int successes){
         if(startOfCombat){

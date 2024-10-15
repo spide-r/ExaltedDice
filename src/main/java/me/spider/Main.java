@@ -1,5 +1,6 @@
 package me.spider;
 
+import me.spider.combat.CombatManager;
 import me.spider.db.JDBCManager;
 import me.spider.dice.Roller;
 import net.dv8tion.jda.api.JDABuilder;
@@ -11,6 +12,7 @@ import java.io.IOException;
 
 public class Main {
     public static Roller roller;
+    public static CombatManager combatManager;
     public static JDBCManager jdbcManager;
     public static void main(String[] args) {
         System.out.println("Hello world!");
@@ -21,6 +23,7 @@ public class Main {
                     .build();
             roller = new Roller();
             jdbcManager = new JDBCManager();
+            combatManager = new CombatManager();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

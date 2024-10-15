@@ -1,12 +1,12 @@
 package me.spider.commands.sheets;
 
 import me.spider.Main;
-import me.spider.commands.GenericCommand;
+import me.spider.commands.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.sql.SQLException;
 
-public class GetWillpower extends GenericCommand {
+public class GetWillpower extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
         if(!event.isFromGuild()){

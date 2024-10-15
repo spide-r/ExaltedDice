@@ -2,10 +2,9 @@ package me.spider.commands.sheets;
 
 import me.spider.Constants;
 import me.spider.Main;
-import me.spider.commands.GenericCommand;
+import me.spider.commands.Command;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.sql.SQLException;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SetEssence extends GenericCommand {
+public class SetEssence extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
         if(!event.isFromGuild()){
@@ -42,8 +41,8 @@ public class SetEssence extends GenericCommand {
     @Override
     public void OnCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
         if(event.getName().equals("setessence") && event.getFocusedOption().getName().equals("essence")){
-            List<Command.Choice> options = Stream.of(Constants.ESSENCE_LIST).filter(w -> w.startsWith(event.getFocusedOption().getValue()))
-                    .map(w -> new Command.Choice(w, w)).collect(Collectors.toList());
+            List<net.dv8tion.jda.api.interactions.commands.Command.Choice> options = Stream.of(Constants.ESSENCE_LIST).filter(w -> w.startsWith(event.getFocusedOption().getValue()))
+                    .map(w -> new net.dv8tion.jda.api.interactions.commands.Command.Choice(w, w)).collect(Collectors.toList());
             event.replyChoices(options).queue();
         }
     }

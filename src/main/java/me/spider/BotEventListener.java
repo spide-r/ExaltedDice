@@ -2,6 +2,7 @@ package me.spider;
 
 import me.spider.commands.DamageRoll;
 import me.spider.commands.Roll;
+import me.spider.commands.combat.*;
 import me.spider.commands.sheets.*;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
@@ -29,6 +31,15 @@ public class BotEventListener extends ListenerAdapter {
     SetLimit setLimit = new SetLimit();
     SetWillpower setWillpower = new SetWillpower();
     ResetEssences resetEssences = new ResetEssences();
+    AddToTick addToTick = new AddToTick();
+    AdvanceCombat advanceCombat = new AdvanceCombat();
+    CurrentTick currentTick = new CurrentTick();
+    Delay delay = new Delay();
+    JoinCombat joinCombat = new JoinCombat();
+    NewScene newScene = new NewScene();
+    RemoveActor removeActor = new RemoveActor();
+    TickZero tickZero = new TickZero();
+
     HashMap<String, Integer> modifiedEssence = new HashMap<>();
     @Override
     public void onGenericEvent(@NotNull GenericEvent event) {
@@ -50,6 +61,7 @@ public class BotEventListener extends ListenerAdapter {
                             .addOption(OptionType.INTEGER, "threshold", "If the success threshold needs to be changed, change it here.", false, false)
                             .addOption(OptionType.INTEGER, "essencemodification", "If the dice roll will modify your essence, change it here.", false, false)
                             .addOption(OptionType.BOOLEAN, "private", "If the dice roll should be shown only to you.", false, false),
+
                     Commands.slash("getessences", "Gets a list of all essence motes attached to you."),
                     Commands.slash("getlimit", "Shows your limit break."),
                     Commands.slash("getwillpower", "Shows your willpower"),
@@ -62,7 +74,29 @@ public class BotEventListener extends ListenerAdapter {
                             .addOption(OptionType.INTEGER, "value", "The New Value", true),
                     Commands.slash("setwillpower", "Sets your willpower to the specified amount")
                             .addOption(OptionType.INTEGER, "value", "The New Value", true),
-                    Commands.slash("resetessences", "Resets all your essences back to their max value.")
+                    Commands.slash("resetessences", "Resets all your essences back to their max value."),
+
+
+                    Commands.slash("addtotick", "Adds a specific actor to participate at a certain tick. !!! DIFFERENT FROM DELAYING !!!")
+                            .addOption(OptionType.INTEGER, "tick", "The tick the actor should be added to.", true)
+                            .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                    Commands.slash("advancecombat", "Advances Combat to the next tick where a combatant moves."),
+                    Commands.slash("currenttick", "Shows the current tick and all participants."),
+                    Commands.slash("delay", "Delays your next action by a specified value")
+                            .addOption(OptionType.INTEGER, "delay", "How Many ticks should the next action be delayed by?", true)
+                            .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                    Commands.slash("joincombat", "Joins the current combat")
+                            .addOption(OptionType.INTEGER, "successes", "How Many successes did you get on your Join Combat Roll?", true)
+                            .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                    Commands.slash("newscene", "Resets Current Combat and Creates a new Scene. Be very sure about this!")
+                            .addOption(OptionType.BOOLEAN, "areyousure", "Are you sure you wish to start a new scene?", true),
+                    Commands.slash("removeactor", "Removes an actor from future combat ticks. (RIP)")
+                            .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)." ),
+                    Commands.slash("tickzero", "Finalizes all combat and officially starts the scene at tick zero.")
+
+
+
+
                     ).queue());
         }
     }
@@ -142,6 +176,31 @@ public class BotEventListener extends ListenerAdapter {
                 break;
             case "resetessences":
                 resetEssences.OnCommand(event);
+                break;
+
+            case "addtotick":
+                addToTick.OnCommand(event);
+                break;
+            case "advancecombat":
+                advanceCombat.OnCommand(event);
+                break;
+            case "currenttick":
+                currentTick.OnCommand(event);
+                break;
+            case "delay":
+                delay.OnCommand(event);
+                break;
+            case "joincombat":
+                joinCombat.OnCommand(event);
+                break;
+            case "newscene":
+                newScene.OnCommand(event);
+                break;
+            case "removeactor":
+                removeActor.OnCommand(event);
+                break;
+            case "tickzero":
+                tickZero.OnCommand(event);
                 break;
         }
         //todo if it modifies essence, prompt the user to remove essence

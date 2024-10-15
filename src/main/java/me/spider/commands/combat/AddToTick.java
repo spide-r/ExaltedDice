@@ -6,17 +6,17 @@ import me.spider.commands.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class Delay extends Command {
+public class AddToTick extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
-        int ticksToDelay = event.getOption("delay", Constants.DEFAULT_TICK, OptionMapping::getAsInt);
+        String channel = event.getChannelId();
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);
-        int newTick = Main.combatManager.delay(event.getChannelId(), ticksToDelay, name);
-
+        int tick = event.getOption("tick", Constants.DEFAULT_TICK, OptionMapping::getAsInt);
+        Main.combatManager.addToTick(channel, tick, name);
         if(name.matches("\\d+")){
-            event.reply("Delaying <@" + name + "> to Tick " + newTick).queue();
+            event.reply("Adding <@" + name + "> to Tick " + tick).queue();
         } else {
-            event.reply("Delaying " + name + " to Tick " + newTick).queue();
+            event.reply("Adding " + name + " to Tick " + tick).queue();
         }
 
     }

@@ -1,13 +1,13 @@
 package me.spider.commands.sheets;
 
 import me.spider.Main;
-import me.spider.commands.GenericCommand;
+import me.spider.commands.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 
-public class ResetEssences extends GenericCommand {
+public class ResetEssences extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
         try {

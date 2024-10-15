@@ -13,5 +13,6 @@ public class Constants {
     public static final int ESSENCE_MODIFIER = -1; // Default essence amount
     public static final String ESSENCE_TYPE = "personal"; // Default essence amount
     public static final String[] ESSENCE_LIST = new String[]{"personalMotes", "personalMax", "peripheralMotes", "peripheralMax", "otherMotes", "otherMax"};
+    public static final int DEFAULT_TICK = 0;
 
 }
