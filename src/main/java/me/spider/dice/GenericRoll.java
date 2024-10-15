@@ -75,7 +75,7 @@ public class GenericRoll {
          thresholdChanged = "\n### :white_check_mark: Success Threshold: {" + this.successThreshold + "}";
         }
 
-        return ((privateRoll) ? ":ghost: " : ":pencil: ")+ label + ":\n:game_die: " + rolls + " " + thresholdChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
+        return ((privateRoll) ? ":ghost: " : ":pencil: ")+ label + "\n:game_die: " + rolls + " " + thresholdChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
     }
 
     public boolean isBotch(){
