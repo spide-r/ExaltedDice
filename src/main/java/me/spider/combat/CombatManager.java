@@ -25,7 +25,7 @@ public class CombatManager {
         StringBuilder builder = new StringBuilder();
         for (int i = currentTick+1; i < currentTick+6; i++) {
             builder.append(":crossed_swords: ").append(i).append("\n");
-            builder.append(getActorsAt(i, channel));
+            builder.append(getActorsAt(i, channel)).append("\n");
         }
         return builder.toString();
     }
@@ -37,9 +37,9 @@ public class CombatManager {
             if(actor.matches("\\d+")){ //user ID
                 builder.append("<@").append(actor).append(">");
             } else {
-                builder.append(actor);
+                builder.append("`").append(actor).append("`");
             }
-            builder.append(" ").append(tick).append("\n");
+            builder.append(" :stopwatch: ").append(tick).append("\n");
 
         });
         return builder.toString();
@@ -61,7 +61,7 @@ public class CombatManager {
                 builder.append(p).append(", ");
             }
         });
-        return builder.toString().replace(", ^", "");
+        return builder.toString().replaceFirst(", $", "");
     }
 
     public int advanceTicks(String channel){

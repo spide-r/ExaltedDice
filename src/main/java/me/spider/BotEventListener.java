@@ -12,11 +12,9 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
-import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -36,9 +34,12 @@ public class BotEventListener extends ListenerAdapter {
     CurrentTick currentTick = new CurrentTick();
     Delay delay = new Delay();
     JoinCombat joinCombat = new JoinCombat();
-    NewScene newScene = new NewScene();
+    StartCombat startCombat = new StartCombat();
     RemoveActor removeActor = new RemoveActor();
     TickZero tickZero = new TickZero();
+    CheckTick checkTick = new CheckTick();
+    NextTicks nextTicks = new NextTicks();
+    NextActions nextActions = new NextActions();
 
     HashMap<String, Integer> modifiedEssence = new HashMap<>();
     @Override
@@ -92,7 +93,11 @@ public class BotEventListener extends ListenerAdapter {
                             .addOption(OptionType.BOOLEAN, "areyousure", "Are you sure you wish to start a new scene?", true),
                     Commands.slash("removeactor", "Removes an actor from future combat ticks. (RIP)")
                             .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)." ),
-                    Commands.slash("tickzero", "Finalizes all combat and officially starts the scene at tick zero.")
+                    Commands.slash("tickzero", "Finalizes all combat and officially starts the scene at tick zero."),
+                    Commands.slash("checktick", "Checks Actions at a given tick")
+                            .addOption(OptionType.INTEGER, "tick", "Which tick should be examined?", true),
+                    Commands.slash("nextticks", "Shows a preview of the next 6 ticks."),
+                    Commands.slash("nextactions", "Shows a list each actor and the next tick they act on.")
 
 
 
@@ -193,14 +198,23 @@ public class BotEventListener extends ListenerAdapter {
             case "joincombat":
                 joinCombat.OnCommand(event);
                 break;
-            case "newscene":
-                newScene.OnCommand(event);
+            case "startcombat":
+                startCombat.OnCommand(event);
                 break;
             case "removeactor":
                 removeActor.OnCommand(event);
                 break;
             case "tickzero":
                 tickZero.OnCommand(event);
+                break;
+            case "checktick":
+                checkTick.OnCommand(event);
+                break;
+            case "nextticks":
+                nextTicks.OnCommand(event);
+                break;
+            case "nextactions":
+                nextActions.OnCommand(event);
                 break;
         }
         //todo if it modifies essence, prompt the user to remove essence

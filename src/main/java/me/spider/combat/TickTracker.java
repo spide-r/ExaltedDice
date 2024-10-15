@@ -69,7 +69,11 @@ And then I suppose a command to remove specific people from the tracker (like wh
     }
 
     public HashSet<String> getTickActorsAt(int tick){
-        return tickList.get(tick);
+        HashSet<String> tt = tickList.get(tick);
+        if(tt == null){
+            tt = new HashSet<>();
+        }
+        return tt;
     }
 
 /*    public HashSet<String> getTickActors(){
@@ -100,6 +104,7 @@ And then I suppose a command to remove specific people from the tracker (like wh
     }
 
     public boolean joinCombat(String actor, int successes){
+        //todo this will need a special type of function so that we can overwrite duplicate "add to combat" commands
         if(startOfCombat){
             return addParticipant(successes, actor, joinCombat);
         } else {
