@@ -89,7 +89,7 @@ public class BotEventListener extends ListenerAdapter {
                     Commands.slash("joincombat", "Joins the current combat")
                             .addOption(OptionType.INTEGER, "successes", "How Many successes did you get on your Join Combat Roll?", true)
                             .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
-                    Commands.slash("newscene", "Resets Current Combat and Creates a new Scene. Be very sure about this!")
+                    Commands.slash("startcombat", "Resets Current Combat and Creates a new Scene. Be very sure about this!")
                             .addOption(OptionType.BOOLEAN, "areyousure", "Are you sure you wish to start a new scene?", true),
                     Commands.slash("removeactor", "Removes an actor from future combat ticks. (RIP)")
                             .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)." ),
