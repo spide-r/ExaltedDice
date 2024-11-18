@@ -1,6 +1,4 @@
-package me.spider.commands;
-
-import me.spider.dice.GenericRoll;
+package me.spider.dice;
 
 public class DamageRoll extends GenericRoll {
     //10's count as 1 success

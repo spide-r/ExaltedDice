@@ -1,7 +1,8 @@
 package me.spider;
 
-import me.spider.commands.DamageRoll;
-import me.spider.commands.Roll;
+import me.spider.commands.DiceRoll;
+import me.spider.dice.DamageRoll;
+import me.spider.dice.Roll;
 import me.spider.commands.combat.*;
 import me.spider.commands.sheets.*;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -10,24 +11,37 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BotEventListener extends ListenerAdapter {
-    GetEssences getEssences = new GetEssences();
+  /*  GetEssences getEssences = new GetEssences();
     GetLimit getLimit = new GetLimit();
     GetWillpower getWillpower = new GetWillpower();
     ModifyEssence modifyEssence = new ModifyEssence();
     SetEssence setEssence = new SetEssence();
     SetLimit setLimit = new SetLimit();
-    SetWillpower setWillpower = new SetWillpower();
+    SetWillpower setWillpower = new SetWillpower();*/
+    GetAttribute getAttribute = new GetAttribute();
+    HelpAttribute helpAttribute = new HelpAttribute();
+    ModifyAttribute modifyAttribute = new ModifyAttribute();
+    SetAttribute setAttribute = new SetAttribute();
+    Sheet sheet = new Sheet();
+    DiceRoll diceRoll = new DiceRoll();
     ResetEssences resetEssences = new ResetEssences();
     AddToTick addToTick = new AddToTick();
     AdvanceCombat advanceCombat = new AdvanceCombat();
@@ -42,12 +56,19 @@ public class BotEventListener extends ListenerAdapter {
     NextActions nextActions = new NextActions();
 
     HashMap<String, Integer> modifiedEssence = new HashMap<>();
+    //todo register commands on guild join
     @Override
     public void onGenericEvent(@NotNull GenericEvent event) {
         if (event instanceof ReadyEvent){
             //todo no need to create commands every event
+            /*
+            /roll standard|damage|help
+            /sheet get|set|modify|reset essence/limit/willpower
+            /combat start|join|advance|delay|add|remove|check|next|help
+             */
             event.getJDA().getGuilds().forEach( guild -> guild.updateCommands().addCommands(
-                    Commands.slash("roll", "Rolls The Dice - 10's count as 2 successes")
+                    Commands.slash("roll", "Dice Rolling").addSubcommands(
+                            new SubcommandData("standard", "Rolls The Dice - 10's count as 2 successes")
                             .addOption(OptionType.INTEGER, "amount", "Amount Of Dice", true)
                             .addOption(OptionType.STRING, "label", "Describe what this dice roll is for", false, false)
                             .addOption(OptionType.INTEGER, "successes", "Amount of Automatic Successes", false, false)
@@ -55,15 +76,28 @@ public class BotEventListener extends ListenerAdapter {
                             .addOption(OptionType.INTEGER, "essencemodification", "If the dice roll will modify your essence.", false, false)
                             .addOption(OptionType.BOOLEAN, "private", "If the dice roll should be shown only to you.", false, false),
 
-                    Commands.slash("damageroll", "Rolls The Dice - 10's count as 1 success")
+                            new SubcommandData("damage", "Rolls The Dice - 10's count as 1 success")
                             .addOption(OptionType.INTEGER, "amount", "Amount Of Dice", true)
                             .addOption(OptionType.STRING, "label", "Describe what this dice roll is for", false, false)
                             .addOption(OptionType.INTEGER, "successes", "Amount of Automatic Successes", false, false)
                             .addOption(OptionType.INTEGER, "threshold", "If the success threshold needs to be changed, change it here.", false, false)
                             .addOption(OptionType.INTEGER, "essencemodification", "If the dice roll will modify your essence, change it here.", false, false)
-                            .addOption(OptionType.BOOLEAN, "private", "If the dice roll should be shown only to you.", false, false),
+                            .addOption(OptionType.BOOLEAN, "private", "If the dice roll should be shown only to you.", false, false)),
 
-                    Commands.slash("getessences", "Gets a list of all essence motes attached to you."),
+                    Commands.slash("sheet", "Character Sheet Management").addSubcommands(
+                            new SubcommandData("get", "Gets Attribute")
+                                    .addOption(OptionType.STRING, "attribute", "Which Attribute?", true, true),
+                            new SubcommandData("set", "Sets Attribute")
+                                    .addOption(OptionType.STRING, "attribute", "Which Attribute?", true, true)
+                                    .addOption(OptionType.INTEGER, "value", "The number to set the attribute at.", true),
+                            new SubcommandData("modify", "Modifies Attribute")
+                                    .addOption(OptionType.STRING, "attribute", "Which Attribute?", true, true)
+                                    .addOption(OptionType.INTEGER, "value", "The number to set the attribute at.", true),
+                            new SubcommandData("help", "Is this thing on?"),
+                            new SubcommandData("resetessences", "Resets all your essences back to their max value.")
+                    ),
+
+              /*      Commands.slash("getessences", "Gets a list of all essence motes attached to you."),
                     Commands.slash("getlimit", "Shows your limit break."),
                     Commands.slash("getwillpower", "Shows your willpower"),
                     Commands.slash("modifyessence", "Modifies an essence by a set amount").addOption(OptionType.STRING, "essence", "Essence Type", true, true)
@@ -75,8 +109,10 @@ public class BotEventListener extends ListenerAdapter {
                             .addOption(OptionType.INTEGER, "value", "The New Value", true),
                     Commands.slash("setwillpower", "Sets your willpower to the specified amount")
                             .addOption(OptionType.INTEGER, "value", "The New Value", true),
-                    Commands.slash("resetessences", "Resets all your essences back to their max value."),
+                    Commands.slash("resetessences", "Resets all your essences back to their max value."),*/
 
+
+                    //combat start|join|advance|delay|add|remove|check|next|help
 
                     Commands.slash("addtotick", "Adds a specific actor to participate at a certain tick. !!! DIFFERENT FROM DELAYING !!!")
                             .addOption(OptionType.INTEGER, "tick", "The tick the actor should be added to.", true)
@@ -108,8 +144,11 @@ public class BotEventListener extends ListenerAdapter {
 
     @Override
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
-         modifyEssence.OnCommandAutoCompleteInteraction(event);
-         setEssence.OnCommandAutoCompleteInteraction(event);
+        if(event.getFocusedOption().getName().equals("attribute")){
+            List<Command.Choice> options = Stream.of(Constants.ATTRIBUTE_LIST).filter(w -> w.startsWith(event.getFocusedOption().getValue()))
+                    .map(w -> new Command.Choice(w, w)).collect(Collectors.toList());
+            event.replyChoices(options).queue();
+        }
     }
 
     @Override
@@ -139,50 +178,14 @@ public class BotEventListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event){
 
-        int amount = event.getOption("amount", Constants.DICE_AMOUNT, OptionMapping::getAsInt);
-        int successes = event.getOption("successes", Constants.SUCCESSES, OptionMapping::getAsInt);
-        int threshold = event.getOption("threshold", Constants.SUCCESS_THRESHOLD, OptionMapping::getAsInt);
-        String label = event.getOption("label", Constants.DEFAULT_LABEL, OptionMapping::getAsString);
-        int essenceAmount = event.getOption("essencemodification", Constants.ESSENCE, OptionMapping::getAsInt);
-        boolean privateRoll = event.getOption("private",Constants.PRIVATE_ROLL, OptionMapping::getAsBoolean);
-
-        boolean modifiesEssence = essenceAmount != 0;
-        if(event.getName().equals("roll")){
-            Roll roll = new Roll(amount, successes, threshold, label, privateRoll);
-            String results = roll.getStringResult();
-            sendDiceInformation(event, modifiesEssence, essenceAmount, results, privateRoll);
-        } else if(event.getName().equals("damageroll")){
-            DamageRoll roll = new DamageRoll(amount, successes, threshold, label, privateRoll);
-            String results = roll.getStringResult();
-            sendDiceInformation(event, modifiesEssence, essenceAmount, results, privateRoll);
-        }
 
         switch (event.getName().toLowerCase()){
-            case "getessences":
-                getEssences.OnCommand(event);
+            case "roll":
+                diceRoll.OnCommand(event);
                 break;
-            case "getlimit":
-                getLimit.OnCommand(event);
+            case "sheet":
+                sheet.OnCommand(event);
                 break;
-            case "getwillpower":
-                getWillpower.OnCommand(event);
-                break;
-            case "modifyessence":
-                modifyEssence.OnCommand(event);
-                break;
-            case "setessence":
-                setEssence.OnCommand(event);
-                break;
-            case "setlimit":
-                setLimit.OnCommand(event);
-                break;
-            case "setwillpower":
-                setWillpower.OnCommand(event);
-                break;
-            case "resetessences":
-                resetEssences.OnCommand(event);
-                break;
-
             case "addtotick":
                 addToTick.OnCommand(event);
                 break;
@@ -219,23 +222,5 @@ public class BotEventListener extends ListenerAdapter {
         }
         //todo if it modifies essence, prompt the user to remove essence
     }
-
-    private void sendDiceInformation(SlashCommandInteractionEvent event, boolean modifiesEssence, int essenceAmount, String results, boolean privateRoll) {
-        if(modifiesEssence){
-            modifiedEssence.put(event.getChannelId() + event.getUser().getId(), essenceAmount);
-            event.reply(results).setEphemeral(privateRoll).addActionRow(StringSelectMenu.create("choose-essence")
-                    .addOptions(SelectOption.of("Personal Motes", "personalMotes"),
-                            SelectOption.of("Personal Max", "personalMax"),
-                            SelectOption.of("Peripheral Motes", "peripheralMotes"),
-                            SelectOption.of("Peripheral Max", "peripheralMax"),
-                            SelectOption.of("Other Motes", "otherMotes"),
-                            SelectOption.of("Other Max", "otherMax"))
-                    .setPlaceholder("Select an essence Type").build()
-            ).queue();
-        } else {
-            event.reply(results).setEphemeral(privateRoll).queue();
-        }
-    }
-
 
 }

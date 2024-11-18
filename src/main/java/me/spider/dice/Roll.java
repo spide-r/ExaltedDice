@@ -1,6 +1,4 @@
-package me.spider.commands;
-
-import me.spider.dice.GenericRoll;
+package me.spider.dice;
 
 public class Roll extends GenericRoll {
     public Roll(int amt, int autoSuccesses, int successThreshold, String label, boolean privateRoll) {

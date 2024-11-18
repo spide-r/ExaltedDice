@@ -13,7 +13,7 @@ public class GetEssences extends Command {
         if(!event.isFromGuild()){
             return;
         }
-        String serverID = event.getGuild().getId();
+       /* String serverID = event.getGuild().getId();
         String userID = event.getUser().getId();
         try {
             HashMap<String, Integer> motes = Main.jdbcManager.getAllEssences(serverID, userID);
@@ -24,7 +24,7 @@ public class GetEssences extends Command {
         } catch (SQLException e) {
             e.printStackTrace();
             event.reply("SQL Exception!").queue();
-        }
+        }*/
     }
     //shows all essence
 

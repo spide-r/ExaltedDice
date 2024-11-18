@@ -34,6 +34,7 @@ public class JDBCManager {
 
 
 
+
     public int getLimit(String serverID, String userID) throws SQLException {
         return getInt(serverID, userID, "limitbreak");
     }
