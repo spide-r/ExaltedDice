@@ -7,10 +7,10 @@ import java.util.Objects;
 
 public class Sheet extends Command {
     GetAttribute getAttribute = new GetAttribute();
-    HelpAttribute helpAttribute = new HelpAttribute();
+    SheetHelp sheetHelp = new SheetHelp();
     ModifyAttribute modifyAttribute = new ModifyAttribute();
     SetAttribute setAttribute = new SetAttribute();
-    ResetEssences resetEssences = new ResetEssences();
+    Refresh refresh = new Refresh();
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
         switch (Objects.requireNonNull(event.getSubcommandName())){
@@ -23,11 +23,11 @@ public class Sheet extends Command {
             case "set":
                 setAttribute.OnCommand(event);
                 break;
-            case "resetessences":
-                resetEssences.OnCommand(event);
+            case "refresh":
+                refresh.OnCommand(event);
                 break;
             case "help":
-                helpAttribute.OnCommand(event);
+                sheetHelp.OnCommand(event);
                 break;
         }
     }

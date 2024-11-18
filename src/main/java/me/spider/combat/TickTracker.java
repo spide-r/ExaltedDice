@@ -1,7 +1,5 @@
 package me.spider.combat;
 
-import com.sun.source.tree.Tree;
-
 import java.util.*;
 
 public class TickTracker {
@@ -57,7 +55,7 @@ And then I suppose a command to remove specific people from the tracker (like wh
     }
 
     public void addToTick(int tick, String actor){
-        addParticipant(tick, actor, tickList);
+        addToTreeMap(tick, actor, tickList);
     }
 
     public int advanceTicks(){
@@ -106,7 +104,7 @@ And then I suppose a command to remove specific people from the tracker (like wh
     public boolean joinCombat(String actor, int successes){
         //todo this will need a special type of function so that we can overwrite duplicate "add to combat" commands
         if(startOfCombat){
-            return addParticipant(successes, actor, joinCombat);
+            return addToTreeMap(successes, actor, joinCombat);
         } else {
             int tickDelay = Math.min(6, Math.max(highestSuccess - successes, 0)); //have to do an extra check since the person joining combat might have more successes than the highest success
             delay(tickDelay, actor);
@@ -119,7 +117,7 @@ And then I suppose a command to remove specific people from the tracker (like wh
         list.put(tick, actors);
     }
 
-    private boolean addParticipant(int tick, String actor, TreeMap<Integer, HashSet<String>> list){
+    private boolean addToTreeMap(int tick, String actor, TreeMap<Integer, HashSet<String>> list){
         HashSet<String> participantsAtTick = new HashSet<>();
         if(list.containsKey(tick)){
             participantsAtTick = list.get(tick);

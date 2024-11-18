@@ -7,7 +7,14 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class AdvanceCombat extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
-        Main.combatManager.advanceTicks(event.getChannelId());
-        event.reply("Combat tick has advanced!\n" + Main.combatManager.getStatus(event.getChannelId())).queue();
+        if(Main.combatManager.getCombat(event.getChannelId()).isStartOfCombat()){
+            Main.combatManager.tickZero(event.getChannelId());
+            String status = Main.combatManager.getStatus(event.getChannelId());
+            event.reply("## Combat Has Started!\n\n" + status).queue();
+        } else {
+            Main.combatManager.advanceTicks(event.getChannelId());
+            event.reply("Combat tick has advanced!\n" + Main.combatManager.getStatus(event.getChannelId())).queue();
+        }
+
     }
 }

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.sql.SQLException;
 import java.util.HashMap;
 
-public class ResetEssences extends Command {
+public class Refresh extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
         try {
@@ -16,7 +16,7 @@ public class ResetEssences extends Command {
             essences.put("peripheralMotes", (essences.get("peripheralMax") == null) ? 0 : essences.get("peripheralMax") );
             essences.put("otherMotes", (essences.get("otherMax") == null) ? 0 : essences.get("otherMax"));
             Main.jdbcManager.setAllEssences(event.getGuild().getId(), event.getUser().getId(), essences);
-            event.reply("All essences have been reset.").queue();
+            event.reply("All essences have been refreshed.").queue();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -1,6 +1,5 @@
 package me.spider.commands.combat;
 
-import me.spider.Constants;
 import me.spider.Main;
 import me.spider.commands.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

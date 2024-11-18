@@ -29,31 +29,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BotEventListener extends ListenerAdapter {
-  /*  GetEssences getEssences = new GetEssences();
-    GetLimit getLimit = new GetLimit();
-    GetWillpower getWillpower = new GetWillpower();
-    ModifyEssence modifyEssence = new ModifyEssence();
-    SetEssence setEssence = new SetEssence();
-    SetLimit setLimit = new SetLimit();
-    SetWillpower setWillpower = new SetWillpower();*/
-    GetAttribute getAttribute = new GetAttribute();
-    HelpAttribute helpAttribute = new HelpAttribute();
-    ModifyAttribute modifyAttribute = new ModifyAttribute();
-    SetAttribute setAttribute = new SetAttribute();
+
     Sheet sheet = new Sheet();
     DiceRoll diceRoll = new DiceRoll();
-    ResetEssences resetEssences = new ResetEssences();
-    AddToTick addToTick = new AddToTick();
-    AdvanceCombat advanceCombat = new AdvanceCombat();
-    CurrentTick currentTick = new CurrentTick();
-    Delay delay = new Delay();
-    JoinCombat joinCombat = new JoinCombat();
-    StartCombat startCombat = new StartCombat();
-    RemoveActor removeActor = new RemoveActor();
-    TickZero tickZero = new TickZero();
-    CheckTick checkTick = new CheckTick();
-    NextTicks nextTicks = new NextTicks();
-    NextActions nextActions = new NextActions();
+    Combat combat = new Combat();
+
 
     HashMap<String, Integer> modifiedEssence = new HashMap<>();
     //todo register commands on guild join
@@ -94,27 +74,37 @@ public class BotEventListener extends ListenerAdapter {
                                     .addOption(OptionType.STRING, "attribute", "Which Attribute?", true, true)
                                     .addOption(OptionType.INTEGER, "value", "The number to set the attribute at.", true),
                             new SubcommandData("help", "Is this thing on?"),
-                            new SubcommandData("resetessences", "Resets all your essences back to their max value.")
+                            new SubcommandData("refresh", "Resets all your essences back to their max value.")
                     ),
 
-              /*      Commands.slash("getessences", "Gets a list of all essence motes attached to you."),
-                    Commands.slash("getlimit", "Shows your limit break."),
-                    Commands.slash("getwillpower", "Shows your willpower"),
-                    Commands.slash("modifyessence", "Modifies an essence by a set amount").addOption(OptionType.STRING, "essence", "Essence Type", true, true)
-                            .addOption(OptionType.INTEGER, "value", "The amount to modify your essence (can be a negative number)", true),
-                    Commands.slash("setessence", "Sets your essence to the specified amount - this overwrites what you currently have set.")
-                            .addOption(OptionType.STRING, "essence", "Essence Type", true, true)
-                            .addOption(OptionType.INTEGER, "value", "The new amount", true),
-                    Commands.slash("setlimit", "Sets your limit break to the specified amount")
-                            .addOption(OptionType.INTEGER, "value", "The New Value", true),
-                    Commands.slash("setwillpower", "Sets your willpower to the specified amount")
-                            .addOption(OptionType.INTEGER, "value", "The New Value", true),
-                    Commands.slash("resetessences", "Resets all your essences back to their max value."),*/
+
+                    //combat start|join|advance|delay|add|remove|check|preview|help
+
+                    Commands.slash("combat", "Combat Commands").addSubcommands(
+                            new SubcommandData("start", "Resets Current Combat and Creates a new Scene. Be very sure about this!")
+                                    .addOption(OptionType.BOOLEAN, "areyousure", "Are you sure you wish to start a new scene?", true),
+                            new SubcommandData("join", "Joins the current combat")
+                                    .addOption(OptionType.INTEGER, "successes", "How Many successes did you get on your Join Combat Roll?", true)
+                                    .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                            new SubcommandData("advance", "Advances Combat to the next tick where a combatant moves."),
+                            new SubcommandData("delay", "Delays your next action by a specified value")
+                                    .addOption(OptionType.INTEGER, "delay", "How Many ticks should the next action be delayed by?", true)
+                                    .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                            new SubcommandData("add", "Adds a specific actor to participate at a certain tick. !!! DIFFERENT FROM DELAYING !!!")
+                                    .addOption(OptionType.INTEGER, "tick", "The tick the actor should be added to.", true)
+                                    .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                            new SubcommandData("remove", "Removes an actor from future combat ticks. (RIP)")
+                                    .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                            new SubcommandData("check", "Checks Actions at a given tick")
+                                    .addOption(OptionType.INTEGER, "tick", "Which tick should be examined?", true),
+                            new SubcommandData("preview", "Shows a preview of whats to come in combat.")
+                                    .addOption(OptionType.STRING, "data", "What Combat Data would you like to see? Next Actions or Next 6 Ticks?", true, true),
+                            new SubcommandData("tick", "Shows the current Tick Data")
 
 
-                    //combat start|join|advance|delay|add|remove|check|next|help
+                    )
 
-                    Commands.slash("addtotick", "Adds a specific actor to participate at a certain tick. !!! DIFFERENT FROM DELAYING !!!")
+                   /* Commands.slash("addtotick", "Adds a specific actor to participate at a certain tick. !!! DIFFERENT FROM DELAYING !!!")
                             .addOption(OptionType.INTEGER, "tick", "The tick the actor should be added to.", true)
                             .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
                     Commands.slash("advancecombat", "Advances Combat to the next tick where a combatant moves."),
@@ -133,7 +123,7 @@ public class BotEventListener extends ListenerAdapter {
                     Commands.slash("checktick", "Checks Actions at a given tick")
                             .addOption(OptionType.INTEGER, "tick", "Which tick should be examined?", true),
                     Commands.slash("nextticks", "Shows a preview of the next 6 ticks."),
-                    Commands.slash("nextactions", "Shows a list each actor and the next tick they act on.")
+                    Commands.slash("nextactions", "Shows a list each actor and the next tick they act on.")*/
 
 
 
@@ -146,6 +136,10 @@ public class BotEventListener extends ListenerAdapter {
     public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
         if(event.getFocusedOption().getName().equals("attribute")){
             List<Command.Choice> options = Stream.of(Constants.ATTRIBUTE_LIST).filter(w -> w.startsWith(event.getFocusedOption().getValue()))
+                    .map(w -> new Command.Choice(w, w)).collect(Collectors.toList());
+            event.replyChoices(options).queue();
+        } else if (event.getFocusedOption().getName().equals("data")){
+            List<Command.Choice> options = Stream.of(Constants.COMBAT_DATA).filter(w -> w.startsWith(event.getFocusedOption().getValue()))
                     .map(w -> new Command.Choice(w, w)).collect(Collectors.toList());
             event.replyChoices(options).queue();
         }
@@ -186,41 +180,10 @@ public class BotEventListener extends ListenerAdapter {
             case "sheet":
                 sheet.OnCommand(event);
                 break;
-            case "addtotick":
-                addToTick.OnCommand(event);
-                break;
-            case "advancecombat":
-                advanceCombat.OnCommand(event);
-                break;
-            case "currenttick":
-                currentTick.OnCommand(event);
-                break;
-            case "delay":
-                delay.OnCommand(event);
-                break;
-            case "joincombat":
-                joinCombat.OnCommand(event);
-                break;
-            case "startcombat":
-                startCombat.OnCommand(event);
-                break;
-            case "removeactor":
-                removeActor.OnCommand(event);
-                break;
-            case "tickzero":
-                tickZero.OnCommand(event);
-                break;
-            case "checktick":
-                checkTick.OnCommand(event);
-                break;
-            case "nextticks":
-                nextTicks.OnCommand(event);
-                break;
-            case "nextactions":
-                nextActions.OnCommand(event);
+            case "combat":
+                combat.OnCommand(event);
                 break;
         }
-        //todo if it modifies essence, prompt the user to remove essence
     }
 
 }

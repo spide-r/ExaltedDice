@@ -17,6 +17,7 @@ public class Constants {
     public static final String ATTRIBUTE = "invalid-attribute";
     public static final String[] ESSENCE_LIST = new String[]{"personalMotes", "personalMax", "peripheralMotes", "peripheralMax", "otherMotes", "otherMax"};
     public static final String[] ATTRIBUTE_LIST = new String[]{"essences", "personalMotes", "personalMax", "peripheralMotes", "peripheralMax", "otherMotes", "otherMax", "willpower", "limitbreak"};
+    public static final String[] COMBAT_DATA = new String[]{"ticks","actions"};
     public static final int DEFAULT_TICK = 0;
 
     public static boolean isValidAttribute(String s){
