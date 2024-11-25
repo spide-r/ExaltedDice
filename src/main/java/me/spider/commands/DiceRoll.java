@@ -23,7 +23,7 @@ public class DiceRoll extends Command{
         int essenceAmount = event.getOption("essencemodification", Constants.ESSENCE, OptionMapping::getAsInt);
         boolean privateRoll = event.getOption("private",Constants.PRIVATE_ROLL, OptionMapping::getAsBoolean);
         boolean modifiesEssence = essenceAmount != 0;
-        if(Objects.equals(event.getSubcommandName(), "damage")){
+        if(Objects.equals(event.getName(), "damage")){
             DamageRoll roll = new DamageRoll(amount, successes, threshold, label, privateRoll);
             String results = roll.getStringResult();
             sendDiceInformation(event, modifiesEssence, essenceAmount, results, privateRoll);

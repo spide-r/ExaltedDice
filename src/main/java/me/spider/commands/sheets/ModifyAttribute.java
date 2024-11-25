@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 
 public class ModifyAttribute extends Command {
     @Override
