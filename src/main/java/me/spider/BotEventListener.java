@@ -35,7 +35,6 @@ public class BotEventListener extends ListenerAdapter {
     Combat combat = new Combat();
 
 
-    HashMap<String, Integer> modifiedEssence = new HashMap<>();
     //todo register commands on guild join
     @Override
     public void onGenericEvent(@NotNull GenericEvent event) {
@@ -150,7 +149,7 @@ public class BotEventListener extends ListenerAdapter {
             String serverID = event.getGuild().getId();
             String userID = event.getUser().getId();
             boolean privateRoll = event.getMessage().getContentRaw().startsWith(":ghost:");
-            int essenceChange = modifiedEssence.get(event.getChannelId() + userID);
+            int essenceChange = DiceRoll.modifiedEssence.get(event.getChannelId() + userID);
             int oldNumber;
             try {
                 oldNumber = Main.jdbcManager.getEssenceValue(serverID,userID,essence);

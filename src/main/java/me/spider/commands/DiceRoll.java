@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class DiceRoll extends Command{
-    HashMap<String, Integer> modifiedEssence = new HashMap<>();
+    public static HashMap<String, Integer> modifiedEssence = new HashMap<>();
 
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
