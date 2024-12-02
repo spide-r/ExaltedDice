@@ -96,7 +96,8 @@ public class BotEventListener extends ListenerAdapter {
                             new SubcommandData("preview", "Shows a preview of whats to come in combat.")
                                     .addOption(OptionType.STRING, "data", "What Combat Data would you like to see? Next Actions or Next 6 Ticks?", true, true),
                             new SubcommandData("tick", "Shows the current Tick Data"),
-                            new SubcommandData("help", "I don't know how to computer???")
+                            new SubcommandData("help", "I don't know how to computer???"),
+                            new SubcommandData("cheatsheet", "I don't know how to combat???")
 
 
                     )
