@@ -80,8 +80,9 @@ public class BotEventListener extends ListenerAdapter {
                             new SubcommandData("start", "Resets Current Combat and Creates a new Scene. Be very sure about this!")
                                     .addOption(OptionType.BOOLEAN, "areyousure", "Are you sure you wish to start a new scene?", true),
                             new SubcommandData("join", "Joins the current combat")
-                                    .addOption(OptionType.INTEGER, "successes", "How Many successes did you get on your Join Combat Roll?", true)
-                                    .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                                    .addOption(OptionType.INTEGER, "joinbattle", "What is your join battle dv?", true)
+                                    .addOption(OptionType.INTEGER, "successes", "Amount of automatic successes (if applicable)")
+                            .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
                             new SubcommandData("advance", "Advances Combat to the next tick where a combatant moves."),
                             new SubcommandData("delay", "Delays your next action by a specified value")
                                     .addOption(OptionType.INTEGER, "delay", "How Many ticks should the next action be delayed by?", true)
