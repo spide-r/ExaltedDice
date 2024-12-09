@@ -59,6 +59,10 @@ public class GenericRoll {
         return hits;
     }
 
+    public int getHitsAndAutoSuccesses(){
+        return getHits() + autoSuccesses;
+    }
+
     public String getLabel(){
         return label;
     }

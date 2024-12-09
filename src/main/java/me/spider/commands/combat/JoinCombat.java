@@ -17,7 +17,7 @@ public class JoinCombat extends Command {
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);
         try{
             Roll roll = new Roll(dv, success, Constants.SUCCESS_THRESHOLD, "Join Battle", false);
-            int successes = roll.getHits();
+            int successes = roll.getHitsAndAutoSuccesses();
             Main.combatManager.joinCombat(event.getChannelId(), dv, name);
             if(name.matches("\\d+")){
                 event.reply("<@" + name + "> joined combat with " + successes + " successes." ).queue();
