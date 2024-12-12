@@ -11,14 +11,13 @@ public class JoinCombat extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
         //todo if you join combat twice, the first successes is used - this needs to be changed
-        //todo use join battle dv instead of plugging in successes
         int dv = event.getOption("joinbattle", Constants.DICE_AMOUNT, OptionMapping::getAsInt);
         int success = event.getOption("successes", Constants.SUCCESSES, OptionMapping::getAsInt);
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);
         try{
             Roll roll = new Roll(dv, success, Constants.SUCCESS_THRESHOLD, "Join Battle", false);
             int successes = roll.getHitsAndAutoSuccesses();
-            Main.combatManager.joinCombat(event.getChannelId(), dv, name);
+            Main.combatManager.joinCombat(event.getChannelId(), successes, name);
             if(name.matches("\\d+")){
                 event.reply("<@" + name + "> joined combat with " + successes + " successes." ).queue();
 

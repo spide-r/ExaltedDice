@@ -1,8 +1,12 @@
 package me.spider.combat;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-public class TickTracker {
+public class TickTracker implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 2522314465556487L;
     /*
     Have a command to start a new fight scene (this should clear any active combatants from the fight tracker)
 A command that lets people roll dice for join battle (or that just has them enter a number)
@@ -16,11 +20,33 @@ And then I suppose a command to remove specific people from the tracker (like wh
      */
 
     private final String channelID;
-    private int currentTick = 0;
+    private int currentTick;
     private boolean startOfCombat;
     private int highestSuccess;
-    private final TreeMap<Integer, HashSet<String>> tickList = new TreeMap<>();
-    private final TreeMap<Integer, HashSet<String>> joinCombat = new TreeMap<>();
+    private TreeMap<Integer, HashSet<String>> tickList = new TreeMap<>();
+    private TreeMap<Integer, HashSet<String>> joinCombat = new TreeMap<>();
+
+    private TickTracker(String channelID, boolean startOfCombat, int currentTick, int highestSuccess, TreeMap<Integer, HashSet<String>> tickList, TreeMap<Integer, HashSet<String>> joinCombat){
+        this.channelID = channelID;
+        this.startOfCombat = startOfCombat;
+        this.currentTick = currentTick;
+        this.highestSuccess = highestSuccess;
+        this.tickList = tickList;
+        this.joinCombat = joinCombat;
+
+    }
+
+    @Override
+    public String toString() {
+        return "TickTracker{" +
+                "channelID='" + channelID + '\'' +
+                ", currentTick=" + currentTick +
+                ", startOfCombat=" + startOfCombat +
+                ", highestSuccess=" + highestSuccess +
+                ", tickList=" + tickList +
+                ", joinCombat=" + joinCombat +
+                '}';
+    }
 
     public TickTracker(String channelID){
         this.channelID = channelID;
@@ -63,6 +89,7 @@ And then I suppose a command to remove specific people from the tracker (like wh
             return -1;
         }
         currentTick = tickList.ceilingKey(currentTick + 1);
+        System.out.println(currentTick);
         return currentTick;
     }
 
@@ -73,10 +100,6 @@ And then I suppose a command to remove specific people from the tracker (like wh
         }
         return tt;
     }
-
-/*    public HashSet<String> getTickActors(){
-        return getTickActorsAt(currentTick);
-    }*/
 
 
     public TreeMap<Integer, HashSet<String>> getNextSixTicks(){
@@ -104,7 +127,7 @@ And then I suppose a command to remove specific people from the tracker (like wh
     public boolean joinCombat(String actor, int successes){
         //todo this will need a special type of function so that we can overwrite duplicate "add to combat" commands
         if(startOfCombat){
-            return addToTreeMap(successes, actor, joinCombat);
+            return addParticipantToJoinCombat(successes, actor, joinCombat);
         } else {
             int tickDelay = Math.min(6, Math.max(highestSuccess - successes, 0)); //have to do an extra check since the person joining combat might have more successes than the highest success
             delay(tickDelay, actor);
@@ -117,15 +140,23 @@ And then I suppose a command to remove specific people from the tracker (like wh
         list.put(tick, actors);
     }
 
-    private boolean addToTreeMap(int tick, String actor, TreeMap<Integer, HashSet<String>> list){
+    private boolean addParticipantToJoinCombat(int successes, String actor, TreeMap<Integer, HashSet<String>> list){
+        list.forEach((suc, participants) -> {
+            participants.remove(actor);
+        });
+        return addToTreeMap(successes, actor, list);
+
+    }
+
+    private boolean addToTreeMap(int index, String actor, TreeMap<Integer, HashSet<String>> list){
         HashSet<String> participantsAtTick = new HashSet<>();
-        if(list.containsKey(tick)){
-            participantsAtTick = list.get(tick);
+        if(list.containsKey(index)){
+            participantsAtTick = list.get(index);
         }
        boolean result =  participantsAtTick.add(actor);
 
         if(result){
-            list.put(tick, participantsAtTick);
+            list.put(index, participantsAtTick);
         }
         return result;
     }

@@ -1,16 +1,32 @@
 package me.spider.combat;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class CombatManager {
-    private final HashMap<String, TickTracker> combat = new HashMap<>();
+public class CombatManager implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 421233549848894L;
+
+    private HashMap<String, TickTracker> combat = new HashMap<>();
 
     public void startCombat(String channel){
         combat.put(channel, new TickTracker(channel));
     }
     public TickTracker getCombat(String channel){
         return combat.get(channel);
+    }
+
+    @Serial
+    private void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.defaultWriteObject();
+        oos.writeObject(combat);
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        ois.defaultReadObject();
+        combat = (HashMap<String, TickTracker>) ois.readObject();
     }
 
     public String getStatus(String channel){
