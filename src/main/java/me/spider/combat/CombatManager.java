@@ -3,12 +3,11 @@ package me.spider.combat;
 import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class CombatManager implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 421233549848894L;
 
-    private HashMap<String, TickTracker> combat = new HashMap<>();
+    private final HashMap<String, TickTracker> combat = new HashMap<>();
 
     public void startCombat(String channel){
         combat.put(channel, new TickTracker(channel));
@@ -17,16 +16,23 @@ public class CombatManager implements Serializable {
         return combat.get(channel);
     }
 
-    @Serial
-    private void writeObject(ObjectOutputStream oos) throws IOException {
-        oos.defaultWriteObject();
-        oos.writeObject(combat);
+    public HashMap<String, String> serialize() throws IOException{
+        HashMap<String, String> map = new HashMap<>();
+        for (Map.Entry<String, TickTracker> entry : combat.entrySet()) {
+            String channel = entry.getKey();
+            TickTracker combat = entry.getValue();
+            map.put(channel, combat.toBLOB());
+        }
+        return map;
     }
 
-    @Serial
-    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
-        ois.defaultReadObject();
-        combat = (HashMap<String, TickTracker>) ois.readObject();
+    public void startupTask(HashMap<String, String> combatStringMap) throws IOException, ClassNotFoundException {
+        for (Map.Entry<String, String> entry : combatStringMap.entrySet()) {
+            String channel = entry.getKey();
+            String blob = entry.getValue();
+            TickTracker tt = TickTracker.fromBLOB(blob);
+            combat.put(channel, tt);
+        }
     }
 
     public String getStatus(String channel){

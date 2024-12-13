@@ -1,7 +1,10 @@
 package me.spider.db;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JDBCManager {
     //server | user | personal | personal max | peripheral | peripheral max | other | other max | limit | willpower
@@ -9,6 +12,10 @@ public class JDBCManager {
     private Statement statement;
     private Connection connection;
     public JDBCManager(){
+
+    }
+
+    public void init(){
         try
         {
             Connection connection = DriverManager.getConnection("jdbc:sqlite:exalted.db");
@@ -19,6 +26,9 @@ public class JDBCManager {
                     " (serverID string, userID string, personalMotes integer default 0, personalMax integer default 0, " +
                     "peripheralMotes integer default 0, peripheralMax integer default 0, otherMotes integer default 0, otherMax integer default 0, limitbreak integer default 0, willpower integer default 5, PRIMARY KEY (serverID, userID))"
             );
+
+            connection.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS combat" +
+                    " (channelID string, combatString string, PRIMARY KEY (channelID))");
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -30,6 +40,49 @@ public class JDBCManager {
 
     public void setEssence(String serverID, String userID, String name, int value) throws SQLException {
         setInt(serverID, userID, name, value);
+    }
+
+    public void setCombat(String channelID, String combatString) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(
+                "INSERT INTO combat (channelID, combatString) VALUES (?,?) ON CONFLICT(channelID) DO UPDATE SET combatString = ?");
+        preparedStatement.setString(1, channelID);
+        preparedStatement.setString(2, combatString);
+        preparedStatement.setString(3, combatString);
+        preparedStatement.executeUpdate();
+    }
+
+    public String getCombat(String channelID) throws SQLException{
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT combatString FROM combat WHERE channelID = ?");
+        preparedStatement.setString(1, channelID);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()){
+            return resultSet.getString("channelID");
+        }
+        return null;
+    }
+
+    public void setAllCombat(HashMap<String, String> combatIdx) throws SQLException{
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO combat (channelID, combatString) VALUES (?,?) ON CONFLICT(channelID) DO UPDATE SET combatString = ?");
+        for (Map.Entry<String, String> entry : combatIdx.entrySet()) {
+            String channelID = entry.getKey();
+            String combatStr = entry.getValue();
+            preparedStatement.setString(1, channelID);
+            preparedStatement.setString(2, combatStr);
+            preparedStatement.addBatch();
+        }
+        preparedStatement.executeBatch();
+    }
+
+    public HashMap<String, String> getAllCombat() throws SQLException{
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM combat"); //this is expensive - is there a better way to iterate through the DB?
+        ResultSet resultSet = preparedStatement.executeQuery();
+        HashMap<String, String> combat = new HashMap<>();
+        if(resultSet.next()){
+            String channelID = resultSet.getString("channelID");
+            String combatStr = resultSet.getString("combatString");
+            combat.put(channelID, combatStr);
+        }
+        return combat;
     }
 
 

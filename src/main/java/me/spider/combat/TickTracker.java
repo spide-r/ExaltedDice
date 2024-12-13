@@ -1,7 +1,6 @@
 package me.spider.combat;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 public class TickTracker implements Serializable {
@@ -19,7 +18,7 @@ Then you have a command that advances to the next tick that anyone is active on,
 And then I suppose a command to remove specific people from the tracker (like when they die)
      */
 
-    private final String channelID;
+    private String channelID;
     private int currentTick;
     private boolean startOfCombat;
     private int highestSuccess;
@@ -46,6 +45,79 @@ And then I suppose a command to remove specific people from the tracker (like wh
                 ", tickList=" + tickList +
                 ", joinCombat=" + joinCombat +
                 '}';
+    }
+
+    public static TickTracker fromBLOB(String blob) throws IOException, ClassNotFoundException {
+        byte[] data = Base64.getDecoder().decode(blob);
+        ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(data));
+        return (TickTracker) objectInputStream.readObject();
+    }
+
+    public String toBLOB() throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(this);
+        objectOutputStream.close();
+        return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
+    }
+
+    @Serial
+    private void writeObject(ObjectOutputStream o) throws IOException {
+        o.defaultWriteObject();
+/*        o.writeObject(channelID);
+        o.writeObject(currentTick);
+        o.writeObject(startOfCombat);
+        o.writeObject(highestSuccess);
+        o.writeObject(tickList);
+        o.writeObject(joinCombat);*/
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream i) throws ClassNotFoundException, IOException{
+        i.defaultReadObject();
+/*        String channelID = (String) i.readObject();
+        Integer currentTick = (Integer) i.readObject();
+        Boolean startOfCombat = (Boolean) i.readObject();
+        Integer highestSuccess = (Integer) i.readObject();
+        TreeMap<Integer, HashSet<String>> tickList= (TreeMap<Integer, HashSet<String>>) i.readObject();
+        TreeMap<Integer, HashSet<String>> joinCombat= (TreeMap<Integer, HashSet<String>>) i.readObject();
+
+        setChannelID(channelID);
+        setCurrentTick(currentTick);
+        setStartOfCombat(startOfCombat);
+        setHighestSuccess(highestSuccess);
+        setTickList(tickList);
+        setJoinCombat(joinCombat);*/
+    }
+
+    @Serial
+    private void readObjectNoData(ObjectInputStream i){
+
+    }
+
+
+    public void setChannelID(String channelID) {
+        this.channelID = channelID;
+    }
+
+    public void setCurrentTick(int currentTick) {
+        this.currentTick = currentTick;
+    }
+
+    public void setStartOfCombat(boolean startOfCombat) {
+        this.startOfCombat = startOfCombat;
+    }
+
+    public void setHighestSuccess(int highestSuccess) {
+        this.highestSuccess = highestSuccess;
+    }
+
+    public void setTickList(TreeMap<Integer, HashSet<String>> tickList) {
+        this.tickList = tickList;
+    }
+
+    public void setJoinCombat(TreeMap<Integer, HashSet<String>> joinCombat) {
+        this.joinCombat = joinCombat;
     }
 
     public TickTracker(String channelID){
@@ -89,7 +161,6 @@ And then I suppose a command to remove specific people from the tracker (like wh
             return -1;
         }
         currentTick = tickList.ceilingKey(currentTick + 1);
-        System.out.println(currentTick);
         return currentTick;
     }
 
@@ -125,7 +196,6 @@ And then I suppose a command to remove specific people from the tracker (like wh
     }
 
     public boolean joinCombat(String actor, int successes){
-        //todo this will need a special type of function so that we can overwrite duplicate "add to combat" commands
         if(startOfCombat){
             return addParticipantToJoinCombat(successes, actor, joinCombat);
         } else {

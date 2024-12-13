@@ -15,15 +15,15 @@ public class Main {
     public static CombatManager combatManager;
     public static JDBCManager jdbcManager;
     public static void main(String[] args) {
-        System.out.println("Hello world!");
         try {
+            jdbcManager = new JDBCManager();
+            roller = new Roller();
+            combatManager = new CombatManager();
             String TOKEN = new BufferedReader(new FileReader(".TOKEN")).readLine().trim();
-            JDABuilder.createDefault(TOKEN, GatewayIntent.GUILD_WEBHOOKS)
+            JDABuilder.createDefault(TOKEN, GatewayIntent.GUILD_WEBHOOKS, GatewayIntent.DIRECT_MESSAGES)
                     .addEventListeners(new BotEventListener())
                     .build();
-            roller = new Roller();
-            jdbcManager = new JDBCManager();
-            combatManager = new CombatManager();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
