@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static Roller roller;
@@ -23,6 +26,11 @@ public class Main {
             JDABuilder.createDefault(TOKEN, GatewayIntent.GUILD_WEBHOOKS, GatewayIntent.DIRECT_MESSAGES)
                     .addEventListeners(new BotEventListener())
                     .build();
+
+            ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+            service.schedule(() -> {
+                combatManager.saveCombat();
+            }, 5, TimeUnit.MINUTES);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -1,6 +1,9 @@
 package me.spider.combat;
 
+import me.spider.Main;
+
 import java.io.*;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -120,5 +123,14 @@ public class CombatManager implements Serializable {
 
     public int getTick(String channel){
         return combat.get(channel).getCurrentTick();
+    }
+
+    public void saveCombat(){
+        try {
+            HashMap<String, String> combat = serialize();
+            Main.jdbcManager.setAllCombat(combat);
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

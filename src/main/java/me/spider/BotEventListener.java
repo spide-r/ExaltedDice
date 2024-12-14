@@ -79,12 +79,7 @@ public class BotEventListener extends ListenerAdapter {
 
     @Override
     public void onShutdown(ShutdownEvent event) {
-        try {
-            HashMap<String, String> combat = Main.combatManager.serialize();
-            Main.jdbcManager.setAllCombat(combat);
-        } catch (SQLException | IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        Main.combatManager.saveCombat();
     }
 
     @Override
