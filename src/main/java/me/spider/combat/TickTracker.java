@@ -219,14 +219,15 @@ And then I suppose a command to remove specific people from the tracker (like wh
     }
 
     private boolean addToTreeMap(int index, String actor, TreeMap<Integer, HashSet<String>> list){
-        HashSet<String> participantsAtTick = new HashSet<>();
+        //todo add more error handling
+        HashSet<String> itemsAtIndex = new HashSet<>();
         if(list.containsKey(index)){
-            participantsAtTick = list.get(index);
+            itemsAtIndex = list.get(index);
         }
-       boolean result =  participantsAtTick.add(actor);
+       boolean result = itemsAtIndex.add(actor);
 
         if(result){
-            list.put(index, participantsAtTick);
+            list.put(index, itemsAtIndex);
         }
         return result;
     }

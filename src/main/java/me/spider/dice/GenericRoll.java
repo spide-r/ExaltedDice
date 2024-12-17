@@ -83,6 +83,9 @@ public class GenericRoll {
     }
 
     public boolean isBotch(){
+        if(tensAreOneHit){ //damage rolls do nothing on a botch, so dont bother highlighting them
+            return false;
+        }
         int amountOf1s = 0;
         for(Die d : dice){
             if(d.success() || autoSuccesses > 0){

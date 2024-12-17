@@ -24,6 +24,9 @@ public class CombatManager implements Serializable {
         for (Map.Entry<String, TickTracker> entry : combat.entrySet()) {
             String channel = entry.getKey();
             TickTracker combat = entry.getValue();
+            if(combat == null){
+                continue;
+            }
             map.put(channel, combat.toBLOB());
         }
         return map;
@@ -33,6 +36,9 @@ public class CombatManager implements Serializable {
         for (Map.Entry<String, String> entry : combatStringMap.entrySet()) {
             String channel = entry.getKey();
             String blob = entry.getValue();
+            if(blob == null){
+                continue;
+            }
             TickTracker tt = TickTracker.fromBLOB(blob);
             combat.put(channel, tt);
         }
@@ -109,8 +115,8 @@ public class CombatManager implements Serializable {
         return combat.get(channel).delay(amount, actor);
     }
 
-    public void joinCombat(String channel, int successes, String actor){
-        combat.get(channel).joinCombat(actor, successes);
+    public boolean joinCombat(String channel, int successes, String actor){
+        return combat.get(channel).joinCombat(actor, successes);
     }
 
     public void removeFromCombat(String channel, String actor){

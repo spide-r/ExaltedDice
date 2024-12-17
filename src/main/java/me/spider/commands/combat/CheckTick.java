@@ -11,6 +11,6 @@ public class CheckTick extends Command {
     public void OnCommand(SlashCommandInteractionEvent event) {
         int tick = event.getOption("tick", Constants.DEFAULT_TICK, OptionMapping::getAsInt);
         String tickStatus = Main.combatManager.getActorsAt(tick, event.getChannelId());
-        event.reply(tickStatus).setEphemeral(true).queue();
+        event.reply("Tick " + tick + ":\n" + tickStatus).setEphemeral(true).queue();
     }
 }

@@ -13,17 +13,21 @@ public class JoinCombat extends Command {
         //todo if you join combat twice, the first successes is used - this needs to be changed
         int dv = event.getOption("joinbattle", Constants.DICE_AMOUNT, OptionMapping::getAsInt);
         int success = event.getOption("successes", Constants.SUCCESSES, OptionMapping::getAsInt);
-        String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);
+        String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString).trim();
         try{
             Roll roll = new Roll(dv, success, Constants.SUCCESS_THRESHOLD, "Join Battle", false);
             int successes = roll.getHitsAndAutoSuccesses();
-            Main.combatManager.joinCombat(event.getChannelId(), successes, name);
-            if(name.matches("\\d+")){
-                event.reply("<@" + name + "> joined combat with " + successes + " successes." ).queue();
-
+            boolean result = Main.combatManager.joinCombat(event.getChannelId(), successes, name);
+            if(result){
+                if(name.matches("\\d+")){
+                    event.reply("<@" + name + "> joined combat with " + successes + " successes." ).queue();
+                } else {
+                    event.reply(name + " joined combat with " + successes + " successes.").queue();
+                }
             } else {
-                event.reply(name + " joined combat with " + successes + " successes.").queue();
+                event.reply("Error Adding to Join Battle!").queue();
             }
+
         } catch (NullPointerException e){
             event.reply("Combat has not yet started!").queue();
         }
