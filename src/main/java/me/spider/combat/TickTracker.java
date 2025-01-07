@@ -139,10 +139,10 @@ And then I suppose a command to remove specific people from the tracker (like wh
         startOfCombat = false;
         highestSuccess = joinCombat.lastKey();
         setParticipants(0, joinCombat.lastEntry().getValue(), tickList);
-        joinCombat.entrySet().forEach(hitsAndParticipants -> {
-            int successes = hitsAndParticipants.getKey();
+        joinCombat.forEach((key, value) -> {
+            int successes = key;
             int tick = Math.min(6, highestSuccess - successes);
-            setParticipants(tick, hitsAndParticipants.getValue(), tickList);
+            setParticipants(tick, value, tickList);
         });
     }
 
@@ -175,7 +175,7 @@ And then I suppose a command to remove specific people from the tracker (like wh
 
     public TreeMap<Integer, HashSet<String>> getNextSixTicks(){
         TreeMap<Integer, HashSet<String>> nextSixTicks = new TreeMap<>();
-        for (int i = currentTick+1; i < currentTick+7 ; i++) {
+        for (int i = currentTick+1; i <= currentTick+7 ; i++) {
             if(tickList.get(i) == null){
                 nextSixTicks.put(i, new HashSet<>());
             } else {
@@ -197,39 +197,55 @@ And then I suppose a command to remove specific people from the tracker (like wh
 
     public boolean joinCombat(String actor, int successes){
         if(startOfCombat){
-            return addParticipantToJoinCombat(successes, actor, joinCombat);
+            addParticipantToJoinCombat(successes, actor, joinCombat);
+            return true;
         } else {
             int tickDelay = Math.min(6, Math.max(highestSuccess - successes, 0)); //have to do an extra check since the person joining combat might have more successes than the highest success
             delay(tickDelay, actor);
-
         }
         return false;
     }
 
     private void setParticipants(int tick, HashSet<String> actors, TreeMap<Integer, HashSet<String>> list){
-        list.put(tick, actors);
+        list.compute(tick, (tt, aa) -> {
+            if(aa == null){
+                aa = actors;
+            } else {
+                aa.addAll(actors);
+            }
+            return aa;
+        });
+        //list.put(tick, actors); //this overwrites the tick
     }
 
-    private boolean addParticipantToJoinCombat(int successes, String actor, TreeMap<Integer, HashSet<String>> list){
+    private void addParticipantToJoinCombat(int successes, String actor, TreeMap<Integer, HashSet<String>> list){
         list.forEach((suc, participants) -> {
             participants.remove(actor);
         });
-        return addToTreeMap(successes, actor, list);
+        addToTreeMap(successes, actor, list);
 
     }
 
-    private boolean addToTreeMap(int index, String actor, TreeMap<Integer, HashSet<String>> list){
+    private void addToTreeMap(int index, String actor, TreeMap<Integer, HashSet<String>> list){
         //todo add more error handling
         HashSet<String> itemsAtIndex = new HashSet<>();
-        if(list.containsKey(index)){
+        list.compute(index, (idx, ll) -> {
+            if(ll == null){
+                ll = new HashSet<>();
+                ll.add(actor);
+            }
+            ll.add(actor);
+            return ll;
+        });
+  /*      if(list.containsKey(index)){
             itemsAtIndex = list.get(index);
         }
        boolean result = itemsAtIndex.add(actor);
 
         if(result){
             list.put(index, itemsAtIndex);
-        }
-        return result;
+        }*/
+        //return result;
     }
 
     public void removeFromCombat(String actor){

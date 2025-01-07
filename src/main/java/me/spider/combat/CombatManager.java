@@ -54,7 +54,7 @@ public class CombatManager implements Serializable {
         int currentTick = combat.get(channel).getCurrentTick();
 
         StringBuilder builder = new StringBuilder();
-        for (int i = currentTick+1; i < currentTick+6; i++) {
+        for (int i = currentTick+1; i < currentTick+7; i++) {
             builder.append(":crossed_swords: ").append(i).append("\n");
             builder.append(getActorsAt(i, channel)).append("\n");
         }

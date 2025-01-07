@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 public class JoinCombat extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
-        //todo if you join combat twice, the first successes is used - this needs to be changed
         int dv = event.getOption("joinbattle", Constants.DICE_AMOUNT, OptionMapping::getAsInt);
         int success = event.getOption("successes", Constants.SUCCESSES, OptionMapping::getAsInt);
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString).trim();
@@ -25,7 +24,7 @@ public class JoinCombat extends Command {
                     event.reply(name + " joined combat with " + successes + " successes.").queue();
                 }
             } else {
-                event.reply("Error Adding to Join Battle!").queue();
+                event.reply("Error Adding to Join Battle Has combat started already? If so, manually add the actor to a tick!").queue();
             }
 
         } catch (NullPointerException e){
