@@ -227,7 +227,6 @@ And then I suppose a command to remove specific people from the tracker (like wh
     }
 
     private void addToTreeMap(int index, String actor, TreeMap<Integer, HashSet<String>> list){
-        //todo add more error handling
         HashSet<String> itemsAtIndex = new HashSet<>();
         list.compute(index, (idx, ll) -> {
             if(ll == null){
@@ -237,15 +236,6 @@ And then I suppose a command to remove specific people from the tracker (like wh
             ll.add(actor);
             return ll;
         });
-  /*      if(list.containsKey(index)){
-            itemsAtIndex = list.get(index);
-        }
-       boolean result = itemsAtIndex.add(actor);
-
-        if(result){
-            list.put(index, itemsAtIndex);
-        }*/
-        //return result;
     }
 
     public void removeFromCombat(String actor){
