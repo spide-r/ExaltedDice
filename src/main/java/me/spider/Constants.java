@@ -60,7 +60,8 @@ public class Constants {
                     new SubcommandData("join", "Joins the current combat")
                             .addOption(OptionType.INTEGER, "joinbattle", "What is your join battle dv?", true)
                             .addOption(OptionType.INTEGER, "successes", "Amount of automatic successes (if applicable)")
-                            .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),
+                            .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself).")
+                            .addOption(OptionType.STRING, "label", "The label of the join battle roll."),
                     new SubcommandData("advance", "Advances Combat to the next tick where a combatant moves."),
                     new SubcommandData("delay", "Delays your next action by a specified value")
                             .addOption(OptionType.INTEGER, "delay", "How Many ticks should the next action be delayed by?", true)

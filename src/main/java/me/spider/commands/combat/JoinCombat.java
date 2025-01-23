@@ -13,16 +13,18 @@ public class JoinCombat extends Command {
         int dv = event.getOption("joinbattle", Constants.DICE_AMOUNT, OptionMapping::getAsInt);
         int success = event.getOption("successes", Constants.SUCCESSES, OptionMapping::getAsInt);
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString).trim();
+        String label = event.getOption("label", "Join Battle", OptionMapping::getAsString).trim();
         try{
-            Roll roll = new Roll(dv, success, Constants.SUCCESS_THRESHOLD, "Join Battle", false);
+            Roll roll = new Roll(dv, success, Constants.SUCCESS_THRESHOLD, label, false);
             int successes = roll.getHitsAndAutoSuccesses();
             boolean result = Main.combatManager.joinCombat(event.getChannelId(), successes, name);
             if(result){
+                String newName = name;
                 if(name.matches("\\d+")){
-                    event.reply("<@" + name + "> joined combat with " + successes + " successes." ).queue();
-                } else {
-                    event.reply(name + " joined combat with " + successes + " successes.").queue();
+                    newName = "<@" + name + ">";
                 }
+                event.reply(roll.getStringResult() + "\n" + newName + " joined combat with " + successes + " successes.").queue();
+
             } else {
                 event.reply("Error Adding to Join Battle Has combat started already? If so, manually add the actor to a tick!").queue();
             }
