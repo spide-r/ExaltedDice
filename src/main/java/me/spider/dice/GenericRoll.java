@@ -71,7 +71,7 @@ public class GenericRoll {
         String rolls = getRolls();
         int hits = getHits();
         int finalHits = hits + autoSuccesses;
-        String hitStr = hits + ((autoSuccesses != 0) ? (autoSuccesses>0) ? " + " : " - " + Math.abs(autoSuccesses) + " :star: **" + finalHits +"** :star:" : "");
+        String hitStr = hits + ((autoSuccesses != 0) ? ((autoSuccesses>0) ? " + " : " - ") + Math.abs(autoSuccesses) + " :star: **" + finalHits +"** :star:" : "");
         String label = getLabel();
 
         String thresholdChanged = "";
