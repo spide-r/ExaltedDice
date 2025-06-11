@@ -80,8 +80,12 @@ public class Constants {
                     new SubcommandData("cheatsheet", "I don't know how to combat???")
 
 
-            )
-
+            ),
+            Commands.slash("blowondice", "Blows on the dice which may or may not increase your luck."),
+/*            Commands.slash("reducemotes", "Quick Command to reduce your motes. It first reduces from your peripheral, then personal, then other")
+                    .addOption(OptionType.INTEGER, "amount", "How many motes to reduce.", true),
+            Commands.slash("addmotes", "Quick Command to increase your motes. It first increases your peripheral, then personal, then other")
+                    .addOption(OptionType.INTEGER, "amount", "How many motes to add.", true),*/
             /* Commands.slash("addtotick", "Adds a specific actor to participate at a certain tick. !!! DIFFERENT FROM DELAYING !!!")
                      .addOption(OptionType.INTEGER, "tick", "The tick the actor should be added to.", true)
                      .addOption(OptionType.STRING, "name", "The name of the actor (if it isn't yourself)."),

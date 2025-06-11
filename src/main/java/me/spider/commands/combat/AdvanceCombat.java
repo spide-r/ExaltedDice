@@ -10,7 +10,8 @@ public class AdvanceCombat extends Command {
         if(Main.combatManager.getCombat(event.getChannelId()).isStartOfCombat()){
             Main.combatManager.tickZero(event.getChannelId());
             String status = Main.combatManager.getStatus(event.getChannelId());
-            event.reply("## Combat Has Started!\n\n" + status).queue();
+            String nextTicksForAllActors = Main.combatManager.getAllActorsNextTick(event.getChannelId());
+            event.reply("## Combat Has Started!\n\n" + nextTicksForAllActors + "\n\n" + status).queue();
         } else {
             Main.combatManager.advanceTicks(event.getChannelId());
             event.reply("Combat tick has advanced!\n" + Main.combatManager.getStatus(event.getChannelId())).queue();

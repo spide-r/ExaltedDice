@@ -1,6 +1,7 @@
 package me.spider;
 
 import me.spider.commands.DiceRoll;
+import me.spider.commands.funny.BlowOnDice;
 import me.spider.db.JDBCManager;
 import me.spider.dice.DamageRoll;
 import me.spider.dice.Roll;
@@ -17,21 +18,11 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.session.ShutdownEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
-import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +31,8 @@ public class BotEventListener extends ListenerAdapter {
     Sheet sheet = new Sheet();
     DiceRoll diceRoll = new DiceRoll();
     Combat combat = new Combat();
+    BlowOnDice blowOnDice = new BlowOnDice();
+
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -138,6 +131,9 @@ public class BotEventListener extends ListenerAdapter {
             case "roll":
             case "damage":
                 diceRoll.OnCommand(event);
+                break;
+            case "blowondice":
+                blowOnDice.OnCommand(event);
                 break;
             case "sheet":
                 sheet.OnCommand(event);
