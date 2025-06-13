@@ -226,6 +226,14 @@ And then I suppose a command to remove specific people from the tracker (like wh
 
     }
 
+    public HashSet<String> getParticipantsThatJoinedCombat(){
+        HashSet<String> participants = new HashSet<>();
+        joinCombat.forEach((tick, pp) -> {
+            participants.addAll(pp);
+        });
+        return participants;
+    }
+
     private void addToTreeMap(int index, String actor, TreeMap<Integer, HashSet<String>> list){
         HashSet<String> itemsAtIndex = new HashSet<>();
         list.compute(index, (idx, ll) -> {

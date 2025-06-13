@@ -17,6 +17,7 @@ public class Combat extends Command {
     CheckTick checkTick = new CheckTick();
     Preview preview = new Preview();
     CombatHelp help = new CombatHelp();
+    Ready ready = new Ready();
     CheatSheet cheatSheet = new CheatSheet();
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
@@ -54,6 +55,9 @@ public class Combat extends Command {
                     break;
                 case "cheatsheet":
                     cheatSheet.OnCommand(event);
+                    break;
+                case "ready":
+                    ready.OnCommand(event);
                     break;
             }
         } catch (NullPointerException e){

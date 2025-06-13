@@ -19,6 +19,7 @@ public class CombatHelp extends Command {
                 **/combat tick** - Shows Current tick
                 **/combat preview actions** - shows all combat actors and their next action
                 **/combat preview ticks** - shows the next 6 ticks and all actors
+                **/combat ready** - Shows who is ready for combat.
                 
                 **/combat add** - Adds Person to tick (NOT THE SAME AS /combat join !!!! )
                 **/combat remove** - Removes person from combat (RIP)
