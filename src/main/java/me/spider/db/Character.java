@@ -61,6 +61,11 @@ private char[][] healthLevels;*/
 
     }
 
+    public Character(String serverID, String userID) {
+        this.serverID = serverID;
+        this.userID = userID;
+    }
+
     public String getServerID() {
         return serverID;
     }

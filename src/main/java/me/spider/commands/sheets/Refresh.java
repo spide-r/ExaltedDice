@@ -3,13 +3,10 @@ package me.spider.commands.sheets;
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import me.spider.Main;
-import me.spider.commands.Command;
 import me.spider.db.Character;
 import me.spider.db.ServerConfiguration;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 
 public class Refresh extends SlashCommand {
     public Refresh(){

@@ -1,18 +1,12 @@
 package me.spider;
 
 import me.spider.commands.DiceRoll;
-import me.spider.commands.funny.BlowOnDice;
-import me.spider.db.JDBCManager;
-import me.spider.dice.DamageRoll;
-import me.spider.dice.Roll;
 import me.spider.commands.combat.*;
 import me.spider.commands.sheets.*;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.session.ShutdownEvent;
@@ -28,8 +22,6 @@ import java.util.stream.Stream;
 
 public class BotEventListener extends ListenerAdapter {
 
-    Sheet sheet = new Sheet();
-    DiceRoll diceRoll = new DiceRoll();
     Combat combat = new Combat();
 
 
@@ -99,44 +91,11 @@ public class BotEventListener extends ListenerAdapter {
     }
 
     @Override
-    public void onStringSelectInteraction(StringSelectInteractionEvent event) {
-        if(event.getComponentId().equals("choose-essence")){
-            String essence = event.getValues().get(0);
-            String serverID = event.getGuild().getId();
-            String userID = event.getUser().getId();
-            boolean privateRoll = event.getMessage().getContentRaw().startsWith(":ghost:");
-            int essenceChange = DiceRoll.modifiedEssence.get(event.getChannelId() + userID);
-            int oldNumber;
-            try {
-                oldNumber = Main.jdbcManager.getEssenceValue(serverID,userID,essence);
-                int newEssence = oldNumber + essenceChange;
-                Main.jdbcManager.setEssence(serverID, userID, essence, newEssence);
-
-                event.reply("Your " + essence + " is now " + newEssence).setEphemeral(privateRoll).queue();
-                event.editSelectMenu(event.getSelectMenu().createCopy().setPlaceholder("You have selected: " + essence).build().asDisabled()).queue();
-
-            } catch (SQLException e) {
-                event.reply("SQL exception!").queue();
-            }
-
-        }
-    }
-
-    @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event){
 
 
-        switch (event.getName().toLowerCase()){
-            case "roll":
-            case "damage":
-                diceRoll.OnCommand(event);
-                break;
-            case "sheet":
-                sheet.OnCommand(event);
-                break;
-            case "combat":
-                combat.OnCommand(event);
-                break;
+        if (event.getName().equalsIgnoreCase("combat")) {
+            combat.OnCommand(event);
         }
     }
 

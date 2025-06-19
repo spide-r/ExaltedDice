@@ -24,7 +24,7 @@ public class ServerConfiguration {
         try{
             return cDao.queryForFieldValues(Map.of("serverID", guildID, "userID", userID)).get(0);
         } catch (IndexOutOfBoundsException | SQLException e){
-            return new Character();
+            return new Character(guildID, userID);
         }
     }
 

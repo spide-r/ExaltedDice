@@ -2,10 +2,6 @@ package me.spider.commands.sheets;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
-import me.spider.commands.Command;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
-import java.util.Objects;
 
 public class Sheet extends SlashCommand {
 
