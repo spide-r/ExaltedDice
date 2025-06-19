@@ -1,22 +1,19 @@
 package me.spider.commands.combat;
 
-import me.spider.Constants;
-import me.spider.Main;
-import me.spider.commands.Command;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 
-public class Preview extends Command {
+public class Preview extends SlashCommand {
+    //parent of nextactions and nextticks
+
+    public Preview(){
+        this.name = "preview";
+        this.help = "Previews combat.";
+        this.children = new SlashCommand[]{new NextActions(), new NextTicks()};
+    }
+
     @Override
-    public void OnCommand(SlashCommandInteractionEvent event) {
-        String data = event.getOption("data", Constants.COMBAT_DATA[0], OptionMapping::getAsString);
-        if(data.equals("actions")){
-            String allActorsAndActions = Main.combatManager.getAllActorsNextTick(event.getChannelId());
-            event.reply("Next Actors and Actions:\n" + allActorsAndActions).setEphemeral(true).queue();
-        } else {
-            String nextSix = Main.combatManager.getNextSixTicks(event.getChannelId());
-            event.reply("Next 6 Ticks:\n" + nextSix).setEphemeral(true).queue();
-        }
+    protected void execute(SlashCommandEvent event) {
 
     }
 }

@@ -19,6 +19,9 @@ dependencies {
     implementation("net.dv8tion:JDA:5.1.2")
     implementation("pw.chew:jda-chewtils:2.0")
     implementation("com.j256.ormlite:ormlite-jdbc:6.1")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.19.0")
+    implementation("ch.qos.logback:logback-classic:1.5.15")
+
 }
 
 tasks.test {

@@ -1,0 +1,331 @@
+package me.spider.db;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.TreeMap;
+
+@DatabaseTable(tableName = "combat")
+public class Combat {
+    //this solution works for now - but if this bot somehow explodes in popularity it might be worth looking at caching
+    @DatabaseField(id = true)
+    private String channelID;
+    @DatabaseField
+    private boolean startOfCombat;
+    @DatabaseField
+    private int currentTick;
+    @DatabaseField
+    private int highestSuccess;
+    @DatabaseField
+    private String tickListJSON;
+    @DatabaseField
+    private String joinCombatJSON;
+
+    //@DatabaseField(dataType = DataType.SERIALIZABLE)
+    private TreeMap<Integer, HashSet<String>> tickList = null; //todo determine if these serialize well
+    //@DatabaseField(dataType = DataType.SERIALIZABLE)
+    private TreeMap<Integer, HashSet<String>> joinCombat = null;
+
+    public Combat(){
+
+    }
+
+    public String treeMapToJSON(TreeMap<Integer, HashSet<String>> map){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public TreeMap<Integer, HashSet<String>> jsonToTreeMap(String json){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(json, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return new TreeMap<Integer, HashSet<String>>();
+        }
+    }
+
+    private void writeJSON(){ //todo sloppy
+        joinCombatJSON = treeMapToJSON(joinCombat);
+        tickListJSON = treeMapToJSON(tickList);
+
+    }
+
+    private Combat(String channelID, boolean startOfCombat, int currentTick, int highestSuccess, TreeMap<Integer, HashSet<String>> tickList, TreeMap<Integer, HashSet<String>> joinCombat){
+        this.channelID = channelID;
+        this.startOfCombat = startOfCombat;
+        this.currentTick = currentTick;
+        this.highestSuccess = highestSuccess;
+        this.tickList = tickList;
+        this.joinCombat = joinCombat;
+    }
+
+    public Combat(String channelID){
+        this.channelID = channelID;
+        startOfCombat = true;
+        currentTick = 0;
+        highestSuccess = 0;
+    }
+
+    public String getChannelID() {
+        return channelID;
+    }
+
+    public boolean isStartOfCombat() {
+        return startOfCombat;
+    }
+
+    public void setStartOfCombat(boolean startOfCombat) {
+        this.startOfCombat = startOfCombat;
+    }
+
+    public int getCurrentTick() {
+        return currentTick;
+    }
+
+    public void setCurrentTick(int currentTick) {
+        this.currentTick = currentTick;
+    }
+
+    public int getHighestSuccess() {
+        return highestSuccess;
+    }
+
+    public void setHighestSuccess(int highestSuccess) {
+        this.highestSuccess = highestSuccess;
+    }
+
+    public String getTickListJSON() {
+        return tickListJSON;
+    }
+
+    public void setTickListJSON(String tickListJSON) {
+        this.tickListJSON = tickListJSON;
+    }
+
+    public String getJoinCombatJSON() {
+        return joinCombatJSON;
+    }
+
+    public void setJoinCombatJSON(String joinCombatJSON) {
+        this.joinCombatJSON = joinCombatJSON;
+    }
+
+    public TreeMap<Integer, HashSet<String>> getTickList() {
+        if(tickList == null){
+            tickList = jsonToTreeMap(tickListJSON);
+        }
+        return tickList;
+    }
+
+    public void setTickList(TreeMap<Integer, HashSet<String>> tickList) {
+        this.tickList = tickList;
+    }
+
+    public TreeMap<Integer, HashSet<String>> getJoinCombat() {
+        if(joinCombat == null){
+            joinCombat = jsonToTreeMap(joinCombatJSON);
+        }
+        return joinCombat;
+    }
+
+    public void setJoinCombat(TreeMap<Integer, HashSet<String>> joinCombat) {
+        this.joinCombat = joinCombat;
+        writeJSON();
+    }
+
+    public void newScene(){
+        startOfCombat = true;
+        currentTick = 0;
+        highestSuccess = 0;
+        getTickList().clear();
+        getJoinCombat().clear();
+    }
+
+    public void tickZero(){
+        startOfCombat = false;
+        highestSuccess = getJoinCombat().lastKey();
+        setParticipants(0, getJoinCombat().lastEntry().getValue(), getTickList());
+        getJoinCombat().forEach((key, value) -> {
+            int successes = key;
+            int tick = Math.min(6, highestSuccess - successes);
+            setParticipants(tick, value, getTickList());
+        });
+        writeJSON();
+    }
+
+    public int delay(int amount, String actor){
+        int actionTick = amount + currentTick;
+        addToTick(actionTick, actor);
+        writeJSON();
+        return actionTick;
+    }
+
+    public void addToTick(int tick, String actor){
+        writeJSON();
+        addToTreeMap(tick, actor, getTickList());
+    }
+
+    public int advanceTicks(){
+        if(getTickList().ceilingKey(currentTick + 1) == null){
+            return -1;
+        }
+        currentTick = getTickList().ceilingKey(currentTick + 1);
+        writeJSON();
+        return currentTick;
+    }
+
+    public HashSet<String> getTickActorsAt(int tick){
+        HashSet<String> tt = getTickList().get(tick);
+        if(tt == null){
+            tt = new HashSet<>();
+        }
+        return tt;
+    }
+
+
+    public TreeMap<Integer, HashSet<String>> getNextSixTicksHM(){
+        TreeMap<Integer, HashSet<String>> nextSixTicks = new TreeMap<>();
+        for (int i = currentTick+1; i <= currentTick+7 ; i++) {
+            if(getTickList().get(i) == null){
+                nextSixTicks.put(i, new HashSet<>());
+            } else {
+                nextSixTicks.put(i, getTickList().get(i));
+            }
+        }
+        return nextSixTicks;
+    }
+
+    public HashMap<String, Integer> getAllActorsNextTickHM(){
+        HashMap<String, Integer> actorsAndTicks = new HashMap<>();
+        getTickList().tailMap(currentTick).forEach((tick, actors) -> {
+            actors.forEach(actor -> {
+                actorsAndTicks.putIfAbsent(actor, tick);
+            });
+        });
+        return actorsAndTicks;
+    }
+
+    public boolean joinCombat(String actor, int successes){
+        if(startOfCombat){
+            addParticipantToJoinCombat(successes, actor, getJoinCombat());
+            writeJSON();
+            return true;
+        } else {
+            return false;
+            /* todo determine if this needs to be
+            int tickDelay = Math.min(6, Math.max(highestSuccess - successes, 0)); //have to do an extra check since the person joining combat might have more successes than the highest success
+            delay(tickDelay, actor);
+            writeJSON();*/
+        }
+    }
+
+    private void setParticipants(int tick, HashSet<String> actors, TreeMap<Integer, HashSet<String>> list){
+        list.compute(tick, (tt, aa) -> {
+            if(aa == null){
+                aa = actors;
+            } else {
+                aa.addAll(actors);
+            }
+            writeJSON();
+            return aa;
+        });
+        //list.put(tick, actors); //this overwrites the tick
+    }
+
+    private void addParticipantToJoinCombat(int successes, String actor, TreeMap<Integer, HashSet<String>> list){
+        list.forEach((suc, participants) -> {
+            participants.remove(actor);
+        });
+        addToTreeMap(successes, actor, list);
+        writeJSON();
+
+    }
+
+    public HashSet<String> getParticipantsThatJoinedCombat(){
+        HashSet<String> participants = new HashSet<>();
+        getJoinCombat().forEach((tick, pp) -> {
+            participants.addAll(pp);
+        });
+        return participants;
+    }
+
+    private void addToTreeMap(int index, String actor, TreeMap<Integer, HashSet<String>> list){
+        HashSet<String> itemsAtIndex = new HashSet<>();
+        list.compute(index, (idx, ll) -> {
+            if(ll == null){
+                ll = new HashSet<>();
+                ll.add(actor);
+            }
+            ll.add(actor);
+            return ll;
+        });
+        writeJSON();
+    }
+
+    public void removeFromCombat(String actor){
+        getTickList().forEach((tick, hashSet) -> {
+            if(tick > currentTick){
+                hashSet.remove(actor);
+            }
+        });
+        writeJSON();
+    }
+
+    public String getActorsAt(int tick){
+        HashSet<String> participants = getTickActorsAt(tick);
+        StringBuilder builder = new StringBuilder();
+        participants.forEach(p -> {
+            if(p.matches("\\d+")){ //user ID
+                builder.append("<@").append(p).append(">").append(", ");
+            } else {
+                builder.append(p).append(", ");
+            }
+        });
+        return builder.toString().replaceFirst(", $", "");
+    }
+
+
+    public String getAllActorsNextTick(){
+        //todo sort by tick
+        HashMap<String, Integer> nextTicks = getAllActorsNextTickHM();
+        StringBuilder builder = new StringBuilder();
+        nextTicks.forEach((actor, tick ) -> {
+            if(actor.matches("\\d+")){ //user ID
+                builder.append("<@").append(actor).append(">");
+            } else {
+                builder.append("`").append(actor).append("`");
+            }
+            builder.append(" :stopwatch: ").append(tick).append("\n");
+
+        });
+        return builder.toString();
+    }
+    public String getNextSixTicks(){
+        int currentTick = getCurrentTick();
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = currentTick+1; i < currentTick+7; i++) {
+            builder.append(":crossed_swords: ").append(i).append("\n");
+            builder.append(getActorsAt(i)).append("\n");
+        }
+        return builder.toString();
+    }
+
+    public String getStatus(){
+        int tick = getCurrentTick();
+        String actors = getActorsAt(tick);
+        return "## :crossed_swords: " + tick + "\nActors: " + actors;
+    }
+}

@@ -1,13 +1,16 @@
 package me.spider.commands.combat;
 
-import me.spider.commands.Command;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 
-public class CheatSheet extends Command {
+public class CheatSheet extends SlashCommand {
+    public CheatSheet(){
+        this.name = "cheatsheet";
+        this.help = "Shows a cheatsheet for 2.5 combat.";
+    }
+
     @Override
-    public void OnCommand(SlashCommandInteractionEvent event) {
+    protected void execute(SlashCommandEvent event) {
         event.reply("""
                 **1) Declaration:**
                     Declare Atk, Charms - declare any perfect Atk

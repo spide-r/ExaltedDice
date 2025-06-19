@@ -1,11 +1,17 @@
 package me.spider.commands.combat;
 
-import me.spider.commands.Command;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 
-public class CombatHelp extends Command {
+public class CombatHelp extends SlashCommand {
+
+    public CombatHelp(){
+        this.name = "Help";
+        this.help = "Shows valid combat commands.";
+    }
+
     @Override
-    public void OnCommand(SlashCommandInteractionEvent event) {
+    protected void execute(SlashCommandEvent event) {
         event.reply("""
                 __Tutorial__:
                 **/combat start True**
