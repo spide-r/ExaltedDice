@@ -48,6 +48,7 @@ public class JoinCombat extends SlashCommand {
             }
 
         } catch (NullPointerException e){
+            e.printStackTrace();
             event.reply("Combat has not yet started!").queue();
         } catch (SQLException e) {
             e.printStackTrace();

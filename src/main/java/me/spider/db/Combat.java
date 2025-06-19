@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,10 +37,13 @@ public class Combat {
 
     }
 
+    Logger LOG = LoggerFactory.getLogger(Combat.class);
     public String treeMapToJSON(TreeMap<Integer, HashSet<String>> map){
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.writeValueAsString(map);
+            String s = mapper.writeValueAsString(map);
+            LOG.info(s);
+            return s;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return "";
@@ -124,7 +129,11 @@ public class Combat {
 
     public TreeMap<Integer, HashSet<String>> getTickList() {
         if(tickList == null){
-            tickList = jsonToTreeMap(tickListJSON);
+            if(tickListJSON == null || tickListJSON.equalsIgnoreCase("null")){
+                tickList = new TreeMap<>();
+            }else {
+                tickList = jsonToTreeMap(tickListJSON);
+            }
         }
         return tickList;
     }
@@ -135,7 +144,15 @@ public class Combat {
 
     public TreeMap<Integer, HashSet<String>> getJoinCombat() {
         if(joinCombat == null){
-            joinCombat = jsonToTreeMap(joinCombatJSON);
+            if(joinCombatJSON == null || joinCombatJSON.equalsIgnoreCase("null")){
+                joinCombat = new TreeMap<>();
+            } else {
+                joinCombat = jsonToTreeMap(joinCombatJSON);
+
+            }
+        }
+        if(joinCombat == null){
+            return new TreeMap<>();
         }
         return joinCombat;
     }
@@ -162,18 +179,15 @@ public class Combat {
             int tick = Math.min(6, highestSuccess - successes);
             setParticipants(tick, value, getTickList());
         });
-        writeJSON();
     }
 
     public int delay(int amount, String actor){
         int actionTick = amount + currentTick;
         addToTick(actionTick, actor);
-        writeJSON();
         return actionTick;
     }
 
     public void addToTick(int tick, String actor){
-        writeJSON();
         addToTreeMap(tick, actor, getTickList());
     }
 
@@ -182,7 +196,6 @@ public class Combat {
             return -1;
         }
         currentTick = getTickList().ceilingKey(currentTick + 1);
-        writeJSON();
         return currentTick;
     }
 
@@ -220,14 +233,9 @@ public class Combat {
     public boolean joinCombat(String actor, int successes){
         if(startOfCombat){
             addParticipantToJoinCombat(successes, actor, getJoinCombat());
-            writeJSON();
             return true;
         } else {
             return false;
-            /* todo determine if this needs to be
-            int tickDelay = Math.min(6, Math.max(highestSuccess - successes, 0)); //have to do an extra check since the person joining combat might have more successes than the highest success
-            delay(tickDelay, actor);
-            writeJSON();*/
         }
     }
 
@@ -249,8 +257,6 @@ public class Combat {
             participants.remove(actor);
         });
         addToTreeMap(successes, actor, list);
-        writeJSON();
-
     }
 
     public HashSet<String> getParticipantsThatJoinedCombat(){
@@ -262,11 +268,9 @@ public class Combat {
     }
 
     private void addToTreeMap(int index, String actor, TreeMap<Integer, HashSet<String>> list){
-        HashSet<String> itemsAtIndex = new HashSet<>();
         list.compute(index, (idx, ll) -> {
             if(ll == null){
                 ll = new HashSet<>();
-                ll.add(actor);
             }
             ll.add(actor);
             return ll;

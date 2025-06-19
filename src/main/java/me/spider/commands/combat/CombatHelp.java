@@ -6,7 +6,7 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 public class CombatHelp extends SlashCommand {
 
     public CombatHelp(){
-        this.name = "Help";
+        this.name = "help";
         this.help = "Shows valid combat commands.";
     }
 
