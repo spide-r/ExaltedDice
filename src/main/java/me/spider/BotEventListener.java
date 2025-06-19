@@ -31,7 +31,6 @@ public class BotEventListener extends ListenerAdapter {
     Sheet sheet = new Sheet();
     DiceRoll diceRoll = new DiceRoll();
     Combat combat = new Combat();
-    BlowOnDice blowOnDice = new BlowOnDice();
 
 
     @Override
@@ -131,9 +130,6 @@ public class BotEventListener extends ListenerAdapter {
             case "roll":
             case "damage":
                 diceRoll.OnCommand(event);
-                break;
-            case "blowondice":
-                blowOnDice.OnCommand(event);
                 break;
             case "sheet":
                 sheet.OnCommand(event);

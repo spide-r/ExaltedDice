@@ -9,12 +9,16 @@ version = "1.0"
 repositories {
     mavenCentral()
     gradlePluginPortal()
+    maven { url = uri("https://m2.chew.pro/releases") }
+
 }
 
 dependencies {
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation("org.xerial:sqlite-jdbc:3.46.1.3")
     implementation("net.dv8tion:JDA:5.1.2")
+    implementation("pw.chew:jda-chewtils:2.0")
+    implementation("com.j256.ormlite:ormlite-jdbc:6.1")
 }
 
 tasks.test {

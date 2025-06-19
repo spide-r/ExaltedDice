@@ -8,6 +8,6 @@ public class CurrentTick extends Command {
     @Override
     public void OnCommand(SlashCommandInteractionEvent event) {
         String status = Main.combatManager.getStatus(event.getChannelId());
-        event.reply(status).queue();
+        event.reply(status).setEphemeral(true).queue();
     }
 }

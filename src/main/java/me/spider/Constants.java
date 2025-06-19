@@ -82,7 +82,7 @@ public class Constants {
 
 
             ),
-            Commands.slash("blowondice", "Blows on the dice which may or may not increase your luck."),
+//            Commands.slash("blowondice", "Blows on the dice which may or may not increase your luck."),
 /*            Commands.slash("reducemotes", "Quick Command to reduce your motes. It first reduces from your peripheral, then personal, then other")
                     .addOption(OptionType.INTEGER, "amount", "How many motes to reduce.", true),
             Commands.slash("addmotes", "Quick Command to increase your motes. It first increases your peripheral, then personal, then other")

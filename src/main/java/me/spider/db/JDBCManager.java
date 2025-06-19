@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+//todo remove
 public class JDBCManager {
     //server | user | personal | personal max | peripheral | peripheral max | other | other max | limit | willpower
 
