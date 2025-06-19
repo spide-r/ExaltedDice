@@ -1,24 +1,37 @@
 package me.spider.commands.sheets;
 
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import me.spider.Main;
 import me.spider.commands.Command;
+import me.spider.db.Character;
+import me.spider.db.ServerConfiguration;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 
-public class Refresh extends Command {
+public class Refresh extends SlashCommand {
+    public Refresh(){
+        this.name = "refresh";
+        this.help = "Refreshes essence motes to their max value.";
+    }
+
     @Override
-    public void OnCommand(SlashCommandInteractionEvent event) {
+    protected void execute(SlashCommandEvent event) {
+        ServerConfiguration serverConfiguration = Main.cc.getSettingsFor(event.getGuild());
+        Character c = serverConfiguration.getCharacter(event.getUser().getId());
+        c.setPeripheralMotes(c.getPeripheralMax());
+        c.setPersonalMotes(c.getPersonalMax());
+        c.setOtherMotes(c.getOtherMax());
         try {
-            HashMap<String, Integer> essences = Main.jdbcManager.getAllEssences(event.getGuild().getId(), event.getUser().getId());
-            essences.put("personalMotes", (essences.get("personalMax") == null) ? 0 : essences.get("personalMax") );
-            essences.put("peripheralMotes", (essences.get("peripheralMax") == null) ? 0 : essences.get("peripheralMax") );
-            essences.put("otherMotes", (essences.get("otherMax") == null) ? 0 : essences.get("otherMax"));
-            Main.jdbcManager.setAllEssences(event.getGuild().getId(), event.getUser().getId(), essences);
+            serverConfiguration.saveCharacter(c);
             event.reply("All essences have been refreshed.").queue();
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            event.reply("Error refreshing essence!").queue();
         }
+
     }
 }

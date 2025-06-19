@@ -23,6 +23,7 @@ public class Main {
     public static Roller roller;
     public static CombatManager combatManager;
     public static JDBCManager jdbcManager;
+    public static CommandClient cc;
     public static void main(String[] args) {
         try {
             jdbcManager = new JDBCManager();
@@ -34,7 +35,7 @@ public class Main {
             commandClientBuilder.setActivity(Activity.listening("Autochthon"));
             //commandClientBuilder.addSlashCommand() todo
             commandClientBuilder.setGuildSettingsManager(new ServerConfigurationManager());
-            CommandClient cc = commandClientBuilder.build();
+            cc = commandClientBuilder.build();
 
             String TOKEN = new BufferedReader(new FileReader(".TOKEN")).readLine().trim();
             JDABuilder.createDefault(TOKEN, GatewayIntent.GUILD_WEBHOOKS, GatewayIntent.DIRECT_MESSAGES)

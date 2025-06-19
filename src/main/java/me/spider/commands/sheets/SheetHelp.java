@@ -1,14 +1,21 @@
 package me.spider.commands.sheets;
 
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import me.spider.Constants;
 import me.spider.commands.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Arrays;
 
-public class SheetHelp extends Command {
+public class SheetHelp extends SlashCommand {
+    public SheetHelp(){
+        this.name = "help";
+        this.help = "How do you use these commands?";
+    }
+
     @Override
-    public void OnCommand(SlashCommandInteractionEvent event) {
+    protected void execute(SlashCommandEvent event) {
         event.reply("You can select Attributes from the following list:\n" + Arrays.stream(Constants.ATTRIBUTE_LIST).toList() + "\n" + """
                 **/sheet get** - Gets the selected attribute
                 **/sheet set** - Overwrites the selected attribute with the chosen value

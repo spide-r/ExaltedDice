@@ -38,7 +38,7 @@ public class Constants {
                     .addOption(OptionType.INTEGER, "threshold", "If the success threshold needs to be changed, change it here.", false, false)
                     .addOption(OptionType.INTEGER, "essencemodification", "If the dice roll will modify your essence, change it here.", false, false)
                     .addOption(OptionType.BOOLEAN, "private", "If the dice roll should be shown only to you.", false, false),
-            Commands.slash("sheet", "Character Sheet Management").addSubcommands(
+            /*Commands.slash("sheet", "Character Sheet Management").addSubcommands(
                     new SubcommandData("get", "Gets Attribute")
                             .addOption(OptionType.STRING, "attribute", "Which Attribute?", true, true),
                     new SubcommandData("set", "Sets Attribute")
@@ -50,7 +50,7 @@ public class Constants {
                     new SubcommandData("help", "Is this thing on?"),
                     new SubcommandData("refresh", "Resets all your essences back to their max value.")
             ),
-
+*/
 
             //combat start|join|advance|delay|add|remove|check|preview|help
 

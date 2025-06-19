@@ -25,6 +25,33 @@ public class Character {
     private int willpower = 0;
     @DatabaseField
     private int limitbreak = 0;
+
+    public int getInt(String type){
+        return switch (type){
+            case "personalMotes" -> getPersonalMotes();
+            case "peripheralMotes" -> getPeripheralMotes();
+            case "otherMotes" -> getOtherMotes();
+            case "personalMax" -> getPersonalMax();
+            case "peripheralMax" -> getPeripheralMax();
+            case "otherMax" -> getOtherMax();
+            case "willpower" -> getWillpower();
+            case "limitbreak" -> getLimitbreak();
+            default -> 0;
+        };
+    }
+
+    public void setInt(String type, int value){
+        switch (type){
+            case "personalMotes" -> setPersonalMotes(value);
+            case "peripheralMotes" -> setPeripheralMotes(value);
+            case "otherMotes" -> setOtherMotes(value);
+            case "personalMax" -> setPersonalMax(value);
+            case "peripheralMax" -> setPeripheralMax(value);
+            case "otherMax" -> setOtherMax(value);
+            case "willpower" -> setWillpower(value);
+            case "limitbreak" -> setLimitbreak(value);
+        };
+    }
     /*
 @DatabaseField
 private char[] filledBoxes; todo later - might need to represent them in a different way

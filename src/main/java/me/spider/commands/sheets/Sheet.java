@@ -1,34 +1,21 @@
 package me.spider.commands.sheets;
 
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import me.spider.commands.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Objects;
 
-public class Sheet extends Command {
-    GetAttribute getAttribute = new GetAttribute();
-    SheetHelp sheetHelp = new SheetHelp();
-    ModifyAttribute modifyAttribute = new ModifyAttribute();
-    SetAttribute setAttribute = new SetAttribute();
-    Refresh refresh = new Refresh();
+public class Sheet extends SlashCommand {
+
+    public Sheet(){
+        this.name = "sheet";
+        this.help = "Commands relating to your character sheet.";
+        this.children = new SlashCommand[]{new GetAttribute(), new SheetHelp(), new ModifyAttribute(), new SetAttribute(), new Refresh()};
+    }
     @Override
-    public void OnCommand(SlashCommandInteractionEvent event) {
-        switch (Objects.requireNonNull(event.getSubcommandName())){
-            case "get":
-                getAttribute.OnCommand(event);
-                break;
-            case "modify":
-                modifyAttribute.OnCommand(event);
-                break;
-            case "set":
-                setAttribute.OnCommand(event);
-                break;
-            case "refresh":
-                refresh.OnCommand(event);
-                break;
-            case "help":
-                sheetHelp.OnCommand(event);
-                break;
-        }
+    protected void execute(SlashCommandEvent event) {
+
     }
 }
