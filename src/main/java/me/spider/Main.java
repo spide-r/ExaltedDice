@@ -2,6 +2,8 @@ package me.spider;
 
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import me.spider.commands.Damage;
+import me.spider.commands.DiceRoll;
 import me.spider.commands.combat.CombatCmd;
 import me.spider.commands.funny.BlowOnDice;
 import me.spider.commands.sheets.Sheet;
@@ -26,7 +28,7 @@ public class Main {
             CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
             commandClientBuilder.setOwnerId(102845358677176320L);
             commandClientBuilder.setActivity(Activity.listening("Autochthon"));
-            commandClientBuilder.addSlashCommands(new BlowOnDice(), new CombatCmd(), new Sheet());
+            commandClientBuilder.addSlashCommands(new DiceRoll(), new Damage(), new BlowOnDice(), new CombatCmd(), new Sheet());
             commandClientBuilder.setGuildSettingsManager(new ServerConfigurationManager());
             cc = commandClientBuilder.build();
 
