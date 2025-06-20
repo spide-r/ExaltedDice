@@ -6,11 +6,16 @@ import me.spider.Constants;
 import me.spider.Main;
 import me.spider.db.Character;
 import me.spider.db.ServerConfiguration;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ModifyAttribute extends SlashCommand {
     public ModifyAttribute(){
@@ -46,5 +51,12 @@ public class ModifyAttribute extends SlashCommand {
                 event.reply("Issue changing attribute!").queue();
             }
         }
+    }
+
+    @Override
+    public void onAutoComplete(CommandAutoCompleteInteractionEvent event) {
+        List<Command.Choice> options = Stream.of(Constants.ATTRIBUTE_LIST).filter(w -> w.startsWith(event.getFocusedOption().getValue()))
+                .map(w -> new Command.Choice(w, w)).collect(Collectors.toList());
+        event.replyChoices(options).queue();
     }
 }

@@ -5,7 +5,6 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
-import java.util.Map;
 
 public class ServerConfiguration {
     private final String guildID;
@@ -24,13 +23,17 @@ public class ServerConfiguration {
 
     public Character getCharacter(String userID) {
         try{
-            return cDao.queryForFieldValues(Map.of("serverID", guildID, "userID", userID)).get(0);
+            Character c = cDao.queryForId(guildID + userID);
+            if( c == null){
+                return new Character(guildID, userID);
+            }
+            return c;
         } catch (IndexOutOfBoundsException | SQLException e){
             return new Character(guildID, userID);
         }
     }
 
-    public Combat getCombat(String channelID){
+    public Combat getCombat(String channelID) {
         try{
             Combat c = combatDao.queryForId(channelID);
             if(c == null){
@@ -39,6 +42,15 @@ public class ServerConfiguration {
             return c;
         } catch (IndexOutOfBoundsException | SQLException e){
             return new Combat(channelID);
+        }
+    }
+
+
+    public boolean isCombatInactive(String channelID) {
+        try {
+            return combatDao.queryForId(channelID) != null;
+        } catch (SQLException e) {
+            return false;
         }
     }
 

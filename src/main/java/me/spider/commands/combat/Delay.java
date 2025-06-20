@@ -24,7 +24,18 @@ public class Delay extends SlashCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         ServerConfiguration sc = Main.cc.getSettingsFor(event.getGuild());
+
+        if(!sc.isCombatInactive(event.getChannelId())){
+            event.reply("Combat has not started!").queue();
+            return;
+        }
         Combat combat = sc.getCombat(event.getChannelId());
+
+        if(combat.isStartOfCombat()){
+            event.reply("Combat has not yet started! Did you mean to join combat with `/combat join`?").queue();
+            return;
+        }
+
 
         int ticksToDelay = event.getOption("delay", Constants.DEFAULT_TICK, OptionMapping::getAsInt);
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);

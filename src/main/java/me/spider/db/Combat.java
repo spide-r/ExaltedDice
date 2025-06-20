@@ -36,7 +36,6 @@ public class Combat {
     public Combat(){
 
     }
-
     Logger LOG = LoggerFactory.getLogger(Combat.class);
     public String treeMapToJSON(TreeMap<Integer, HashSet<String>> map){
         ObjectMapper mapper = new ObjectMapper();

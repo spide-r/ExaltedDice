@@ -22,6 +22,10 @@ public class RemoveActor extends SlashCommand {
     protected void execute(SlashCommandEvent event) {
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);
         ServerConfiguration sc = Main.cc.getSettingsFor(event.getGuild());
+        if(!sc.isCombatInactive(event.getChannelId())){
+            event.reply("Combat has not started!").queue();
+            return;
+        }
         Combat combat = sc.getCombat(event.getChannelId());
         combat.removeFromCombat(name);
         try {

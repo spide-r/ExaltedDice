@@ -25,9 +25,14 @@ public class AddToTick extends SlashCommand {
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);
         int tick = event.getOption("tick", Constants.DEFAULT_TICK, OptionMapping::getAsInt);
         ServerConfiguration sc = Main.cc.getSettingsFor(event.getGuild());
-        Combat combat = sc.getCombat(event.getChannelId());
-        combat.addToTick(tick, name);
+        if(sc.isCombatInactive(event.getChannelId())){
+            event.reply("Combat has not started!").queue();
+        }
+
         try {
+            Combat combat = sc.getCombat(event.getChannelId());
+            combat.addToTick(tick, name);
+
             sc.saveCombat(combat);
             if(name.matches("\\d+")){
                 event.reply("Adding <@" + name + "> to Tick " + tick).queue();

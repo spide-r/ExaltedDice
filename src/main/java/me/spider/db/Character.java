@@ -5,6 +5,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "characters")
 public class Character {
+    @DatabaseField(defaultValue = "0", id = true)
+    private String serverUserID;
     @DatabaseField(defaultValue = "0")
     private String serverID;
     @DatabaseField(defaultValue = "0")
@@ -58,12 +60,12 @@ private char[] filledBoxes; todo later - might need to represent them in a diffe
 @DatabaseField
 private char[][] healthLevels;*/
     public Character(){
-
     }
 
     public Character(String serverID, String userID) {
         this.serverID = serverID;
         this.userID = userID;
+        this.serverUserID = serverID + userID;
     }
 
     public String getServerID() {
