@@ -8,9 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeMap;
+import java.util.*;
 
 @DatabaseTable(tableName = "combat")
 public class Combat {
@@ -56,7 +54,7 @@ public class Combat {
             });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            return new TreeMap<Integer, HashSet<String>>();
+            return new TreeMap<>();
         }
     }
 
@@ -190,12 +188,11 @@ public class Combat {
         addToTreeMap(tick, actor, getTickList());
     }
 
-    public int advanceTicks(){
+    public void advanceTicks(){
         if(getTickList().ceilingKey(currentTick + 1) == null){
-            return -1;
+            return;
         }
         currentTick = getTickList().ceilingKey(currentTick + 1);
-        return currentTick;
     }
 
     public HashSet<String> getTickActorsAt(int tick){
@@ -206,26 +203,15 @@ public class Combat {
         return tt;
     }
 
-
-    public TreeMap<Integer, HashSet<String>> getNextSixTicksHM(){
-        TreeMap<Integer, HashSet<String>> nextSixTicks = new TreeMap<>();
-        for (int i = currentTick+1; i <= currentTick+7 ; i++) {
-            if(getTickList().get(i) == null){
-                nextSixTicks.put(i, new HashSet<>());
-            } else {
-                nextSixTicks.put(i, getTickList().get(i));
+    public TreeMap<Integer, HashSet<String>> getAllActorsNextTickTreeMap(){
+        TreeMap<Integer, HashSet<String>> actorsAndTicks = new TreeMap<>();
+        getTickList().tailMap(currentTick).forEach((t, a) -> actorsAndTicks.compute(t, (i, aa) -> {
+            if(aa == null){
+                aa = new HashSet<>();
             }
-        }
-        return nextSixTicks;
-    }
-
-    public HashMap<String, Integer> getAllActorsNextTickHM(){
-        HashMap<String, Integer> actorsAndTicks = new HashMap<>();
-        getTickList().tailMap(currentTick).forEach((tick, actors) -> {
-            actors.forEach(actor -> {
-                actorsAndTicks.putIfAbsent(actor, tick);
-            });
-        });
+            aa.addAll(a);
+            return aa;
+        }));
         return actorsAndTicks;
     }
 
@@ -252,17 +238,13 @@ public class Combat {
     }
 
     private void addParticipantToJoinCombat(int successes, String actor, TreeMap<Integer, HashSet<String>> list){
-        list.forEach((suc, participants) -> {
-            participants.remove(actor);
-        });
+        list.forEach((suc, participants) -> participants.remove(actor));
         addToTreeMap(successes, actor, list);
     }
 
     public HashSet<String> getParticipantsThatJoinedCombat(){
         HashSet<String> participants = new HashSet<>();
-        getJoinCombat().forEach((tick, pp) -> {
-            participants.addAll(pp);
-        });
+        getJoinCombat().forEach((tick, pp) -> participants.addAll(pp));
         return participants;
     }
 
@@ -302,15 +284,19 @@ public class Combat {
 
     public String getAllActorsNextTick(){
         //todo sort by tick
-        HashMap<String, Integer> nextTicks = getAllActorsNextTickHM();
+        TreeMap<Integer, HashSet<String>> nextTicks = getAllActorsNextTickTreeMap();
         StringBuilder builder = new StringBuilder();
-        nextTicks.forEach((actor, tick ) -> {
-            if(actor.matches("\\d+")){ //user ID
-                builder.append("<@").append(actor).append(">");
-            } else {
-                builder.append("`").append(actor).append("`");
-            }
-            builder.append(" :stopwatch: ").append(tick).append("\n");
+        nextTicks.forEach((tick, actors) -> {
+            builder.append("### :stopwatch: ").append(tick).append("\n");
+            actors.forEach(actor -> {
+                if(actor.matches("\\d+")){ //user ID
+                    builder.append("<@").append(actor).append("> ");
+                } else {
+                    builder.append("`").append(actor).append("` ");
+                }
+            });
+            builder.append("\n");
+
 
         });
         return builder.toString();
