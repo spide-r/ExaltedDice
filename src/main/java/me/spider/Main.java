@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
+//todo: have the /spend and /restore essence command mark what level anima you are
 public class Main {
     public static Roller roller;
     public static CommandClient cc;

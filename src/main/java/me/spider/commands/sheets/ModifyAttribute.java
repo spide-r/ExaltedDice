@@ -34,11 +34,10 @@ public class ModifyAttribute extends SlashCommand {
             event.reply("The attribute is invalid!").queue();
         }
         ServerConfiguration c = Main.cc.getSettingsFor(event.getGuild());
-        Character ch = c.getCharacter(event.getId());
+        Character ch = c.getCharacter(event.getUser().getId());
 
         if(attribute.equals("essences")){
             event.reply("Only modify one attribute at a time, sorry!").queue();
-
         } else {
             int attributeInt = ch.getInt(attribute);
             attributeInt += valueToIncrease;

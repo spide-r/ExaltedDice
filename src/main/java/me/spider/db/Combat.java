@@ -283,7 +283,6 @@ public class Combat {
 
 
     public String getAllActorsNextTick(){
-        //todo sort by tick
         TreeMap<Integer, HashSet<String>> nextTicks = getAllActorsNextTickTreeMap();
         StringBuilder builder = new StringBuilder();
         nextTicks.forEach((tick, actors) -> {

@@ -3,33 +3,39 @@ package me.spider.db;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
 public class ServerConfiguration {
-    private final String guildID;
-    Dao<Character, String> cDao;
+    private final String serverID;
+    Dao<Character, String> characterDao;
     Dao<Combat, String> combatDao;
+    Logger LOG = LoggerFactory.getLogger(ServerConfiguration.class);
 
-    public ServerConfiguration(String guildID, ConnectionSource connection){
-        this.guildID = guildID;
+    public ServerConfiguration(String serverID, ConnectionSource connection){
+        this.serverID = serverID;
         try {
-            cDao = DaoManager.createDao(connection, Character.class);
+            characterDao = DaoManager.createDao(connection, Character.class);
             combatDao = DaoManager.createDao(connection, Combat.class);
         } catch (SQLException e) {
+            LOG.error("Issue Creating DAO", e);
             throw new RuntimeException(e);
         }
     }
 
     public Character getCharacter(String userID) {
         try{
-            Character c = cDao.queryForId(guildID + userID);
+            Character c = characterDao.queryForId(serverID + userID);
             if( c == null){
-                return new Character(guildID, userID);
+                LOG.error("Character is null.");
+                return new Character(serverID, userID);
             }
             return c;
         } catch (IndexOutOfBoundsException | SQLException e){
-            return new Character(guildID, userID);
+            LOG.error("Issue Trying to pull a character", e);
+            return new Character(serverID, userID);
         }
     }
 
@@ -41,6 +47,7 @@ public class ServerConfiguration {
             }
             return c;
         } catch (IndexOutOfBoundsException | SQLException e){
+            LOG.error("Issue Trying to pull combat", e);
             return new Combat(channelID);
         }
     }
@@ -50,12 +57,13 @@ public class ServerConfiguration {
         try {
             return combatDao.queryForId(channelID) != null;
         } catch (SQLException e) {
+            LOG.error("Cannot determine combat status.", e);
             return false;
         }
     }
 
     public void saveCharacter(Character character) throws SQLException {
-        cDao.createOrUpdate(character);
+        characterDao.createOrUpdate(character);
     }
 
     public void saveCombat(Combat combat) throws SQLException {

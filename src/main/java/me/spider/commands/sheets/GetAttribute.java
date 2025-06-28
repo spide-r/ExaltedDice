@@ -38,7 +38,7 @@ public class GetAttribute extends SlashCommand {
             event.reply("The attribute is invalid!").queue();
         }
         ServerConfiguration c = Main.cc.getSettingsFor(event.getGuild());
-        Character ch = c.getCharacter(event.getId());
+        Character ch = c.getCharacter(event.getUser().getId());
 
         if(attribute.equals("essences")){
             String personal = "Personal: " + ch.getPersonalMotes() + "/" + ch.getPersonalMax();
