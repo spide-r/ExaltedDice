@@ -36,18 +36,13 @@ public class GetAttribute extends SlashCommand {
         String attribute = event.getOption("attribute", Constants.ATTRIBUTE, OptionMapping::getAsString);
         if(!Constants.isValidAttribute(attribute)){
             event.reply("The attribute is invalid!").queue();
+            return;
         }
         ServerConfiguration c = Main.cc.getSettingsFor(event.getGuild());
         Character ch = c.getCharacter(event.getUser().getId());
 
-        if(attribute.equals("essences")){
-            String personal = "Personal: " + ch.getPersonalMotes() + "/" + ch.getPersonalMax();
-            String peripheral = "Peripheral: " + ch.getPeripheralMotes() + "/" + ch.getPeripheralMax();
-            String other = "Other: " + ch.getOtherMotes() + "/" + ch.getOtherMax();
-            event.reply(personal + "\n" + peripheral + "\n" + other).queue();
-        } else {
-            int attributeInt = ch.getInt(attribute);
-            event.reply(attribute + ": " + attributeInt).queue();
-        }
+        int attributeInt = ch.getInt(attribute);
+        event.reply(attribute + ": " + attributeInt).queue();
+
     }
 }

@@ -32,24 +32,22 @@ public class ModifyAttribute extends SlashCommand {
 
         if(!Constants.isValidAttribute(attribute)){
             event.reply("The attribute is invalid!").queue();
+            return;
         }
         ServerConfiguration c = Main.cc.getSettingsFor(event.getGuild());
         Character ch = c.getCharacter(event.getUser().getId());
 
-        if(attribute.equals("essences")){
-            event.reply("Only modify one attribute at a time, sorry!").queue();
-        } else {
-            int attributeInt = ch.getInt(attribute);
-            attributeInt += valueToIncrease;
-            ch.setInt(attribute, attributeInt);
-            try {
-                c.saveCharacter(ch);
-                event.reply("Your " + attribute + " is now: " + attributeInt).queue();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                event.reply("Issue changing attribute!").queue();
-            }
+        int attributeInt = ch.getInt(attribute);
+        attributeInt += valueToIncrease;
+        ch.setInt(attribute, attributeInt);
+        try {
+            c.saveCharacter(ch);
+            event.reply("Your " + attribute + " is now: " + attributeInt).queue();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            event.reply("Issue changing attribute!").queue();
         }
+
     }
 
     @Override

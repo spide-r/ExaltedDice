@@ -141,5 +141,63 @@ private char[][] healthLevels;*/
     }
 
 
+    public int spendMotes(int amount){
+        int totalEssences = getPeripheralMotes() + getPersonalMotes();
+        if(amount > totalEssences){
+            return -1;
+        }
+
+        int personalMotes = getPersonalMotes();
+        if(personalMotes >= amount){
+            personalMotes = personalMotes - amount;
+            setPersonalMotes(personalMotes);
+            return 0;
+        } else {
+            amount = amount - personalMotes;
+            setPersonalMotes(0);
+
+            int peripheralMotes = getPeripheralMotes();
+            peripheralMotes = peripheralMotes - amount;
+            setPeripheralMotes(Math.max(0, peripheralMotes));
+            return 1;
+        }
+       }
+
+    public int recoverMotes(int amount){
+        int maxEssence = getPeripheralMax() + getPersonalMax();
+        if(amount > maxEssence){
+            return -1;
+        }
+
+        if(getPeripheralMax() >= amount + getPeripheralMotes()){
+            setPeripheralMotes(amount + getPeripheralMotes());
+            return 0;
+        } else {
+            amount = amount - (getPeripheralMax() - getPeripheralMotes());
+            setPeripheralMotes(getPeripheralMax());
+            setPersonalMotes(Math.min(getPersonalMax(), getPersonalMotes() + amount));
+            return 1;
+        }
+    }
+
+    public String getAnimaEffect(){
+        int totalSpend = getPeripheralMax() - getPeripheralMotes();
+        if(totalSpend <= 3){
+            return "glittering (1-3)";
+        }
+        if(totalSpend <= 7){
+            return "burning (4-7)";
+        }
+        if(totalSpend <= 10){
+            return "coruscant (8-10)";
+        }
+
+        if(totalSpend <= 15){
+            return "bonfire (11-15)";
+        }
+
+        return "totemic (16+)";
+    }
+
 
 }

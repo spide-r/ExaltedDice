@@ -1,4 +1,4 @@
-package me.spider.commands.sheets;
+package me.spider.commands.shortcuts;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;

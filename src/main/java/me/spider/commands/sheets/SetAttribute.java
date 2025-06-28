@@ -32,24 +32,20 @@ public class SetAttribute extends SlashCommand {
 
         if(!Constants.isValidAttribute(attribute)){
             event.reply("The attribute is invalid!").queue();
+            return;
         }
         ServerConfiguration c = Main.cc.getSettingsFor(event.getGuild());
         Character ch = c.getCharacter(event.getUser().getId());
 
-        if(attribute.equals("essences")){
-            event.reply("Only set one attribute at a time, sorry!").queue();
-
-        } else {
-
-            ch.setInt(attribute, value);
-            try {
-                c.saveCharacter(ch);
-                event.reply("Your " + attribute + " is now: " + value).queue();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                event.reply("Issue setting attribute!").queue();
-            }
+        ch.setInt(attribute, value);
+        try {
+            c.saveCharacter(ch);
+            event.reply("Your " + attribute + " is now: " + value).queue();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            event.reply("Issue setting attribute!").queue();
         }
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import me.spider.commands.DiceRoll;
 import me.spider.commands.combat.CombatCmd;
 import me.spider.commands.funny.BlowOnDice;
 import me.spider.commands.sheets.Sheet;
+import me.spider.commands.shortcuts.*;
 import me.spider.db.ServerConfigurationManager;
 import me.spider.dice.Roller;
 import net.dv8tion.jda.api.JDABuilder;
@@ -17,7 +18,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-//todo: have the /spend and /restore essence command mark what level anima you are
 public class Main {
     public static Roller roller;
     public static CommandClient cc;
@@ -28,7 +28,8 @@ public class Main {
             CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
             commandClientBuilder.setOwnerId(102845358677176320L);
             commandClientBuilder.setActivity(Activity.listening("Autochthon"));
-            commandClientBuilder.addSlashCommands(new DiceRoll(), new Damage(), new BlowOnDice(), new CombatCmd(), new Sheet());
+            commandClientBuilder.addSlashCommands(new DiceRoll(), new Damage(), new BlowOnDice(), new CombatCmd(), new Sheet(),
+            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence());
             commandClientBuilder.setGuildSettingsManager(new ServerConfigurationManager());
             cc = commandClientBuilder.build();
 

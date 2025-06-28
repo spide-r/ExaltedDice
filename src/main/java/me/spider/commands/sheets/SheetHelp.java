@@ -20,7 +20,7 @@ public class SheetHelp extends SlashCommand {
                 **/sheet modify** - Modifies the selected attribute by the chosen value
                 **/sheet refresh** - Resets your essences back to their max value
                 
-                Use **/sheet get essences** to get all your essences.
+                Use **/essence** to get all your essences.
                 """).queue();
     }
 }
