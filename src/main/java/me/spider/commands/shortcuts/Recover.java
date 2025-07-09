@@ -41,7 +41,7 @@ public class Recover extends SlashCommand {
         } else if(recoverResponse == 0){
             event.reply("Your peripheral essence is now: `" + ch.getPeripheralMotes() + "` due to " + label + ".").queue();
         } else if(recoverResponse == 1){
-            event.reply("Your peripheral essence is now `" + ch.getPeripheralMotes() + "` due to " + label + "and your personal essence is now `" + ch.getPersonalMotes() + "`.").queue();
+            event.reply("Your peripheral essence is now `" + ch.getPeripheralMotes() + "` due to " + label + ". Your personal essence is now `" + ch.getPersonalMotes() + "`.").queue();
         }
     }
 }

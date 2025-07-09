@@ -21,6 +21,6 @@ public class Ready extends SlashCommand {
         HashSet<String> part = combat.getParticipantsThatJoinedCombat();
         StringBuilder builder = new StringBuilder();
         part.forEach(e -> builder.append((e.matches("\\d+") ? "<@" + e + ">" : e )).append("\n"));
-        event.reply("The following actors have joined combat: " + builder).setEphemeral(true).queue();
+        event.reply("The following actors have joined combat:\n" + builder).setEphemeral(true).queue();
     }
 }
