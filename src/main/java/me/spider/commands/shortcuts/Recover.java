@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class Recover extends SlashCommand {
     public Recover(){
         this.name = "recover";
-        this.help = "Recovers motes. It first increases your peripheral, then personal.";
+        this.help = "Recovers motes. It first increases your personal, then peripheral.";
         this.options.add(new OptionData(OptionType.INTEGER, "amount", "How much essence are you restoring?", true));
         this.options.add(new OptionData(OptionType.STRING, "label", "Why are you recovering essence?"));
 
@@ -39,7 +39,7 @@ public class Recover extends SlashCommand {
         if(recoverResponse == -1){
             event.reply("You are restoring too much essence! You can restore a maximum of `" + ch.getPersonalMax() + "` personal and `" + ch.getPeripheralMax() + "` peripheral, totalling `" + maxEssence + "`.").queue();
         } else if(recoverResponse == 0){
-            event.reply("Your peripheral essence is now: `" + ch.getPeripheralMotes() + "` due to " + label + ".").queue();
+            event.reply("Your personal essence is now: `" + ch.getPersonalMotes() + "` due to " + label + ".").queue();
         } else if(recoverResponse == 1){
             event.reply("Your peripheral essence is now `" + ch.getPeripheralMotes() + "` due to " + label + ". Your personal essence is now `" + ch.getPersonalMotes() + "`.").queue();
         }

@@ -18,6 +18,7 @@ public class Spend extends SlashCommand {
         this.help = "Burns motes. It first reduces from your personal, then peripheral.";
         this.options.add(new OptionData(OptionType.INTEGER, "amount", "How much essence are you spending?", true));
         this.options.add(new OptionData(OptionType.STRING, "label", "Why are you using essence?"));
+        this.options.add(new OptionData(OptionType.BOOLEAN, "reverse", "Reduce from peripheral first, then personal."));
     }
     @Override
     protected void execute(SlashCommandEvent event) {
@@ -25,7 +26,14 @@ public class Spend extends SlashCommand {
         Character ch = c.getCharacter(event.getUser().getId());
         int amount = event.getOption("amount", Constants.ESSENCE, OptionMapping::getAsInt);
         String label = event.getOption("label", Constants.DEFAULT_LABEL, OptionMapping::getAsString);
-        int spendResponse = ch.spendMotes(amount);
+        boolean reverse = event.getOption("reverse", false, OptionMapping::getAsBoolean);
+        int spendResponse;
+
+        if(!reverse){
+            spendResponse = ch.spendMotes(amount);
+        } else {
+            spendResponse = ch.spendMotesPeripheralFirst(amount);
+        }
 
         try {
             c.saveCharacter(ch);

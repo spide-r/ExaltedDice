@@ -161,7 +161,28 @@ private char[][] healthLevels;*/
             setPeripheralMotes(Math.max(0, peripheralMotes));
             return 1;
         }
-       }
+    }
+
+    public int spendMotesPeripheralFirst(int amount){
+        int totalEssences = getPeripheralMotes() + getPersonalMotes();
+        if(amount > totalEssences){
+            return -1;
+        }
+
+        int peripheral = getPeripheralMotes();
+        if(peripheral >= amount){
+            peripheral = peripheral - amount;
+            setPeripheralMotes(peripheral);
+            return 1;
+        } else {
+            amount = amount - peripheral;
+            setPeripheralMotes(0);
+            int personal = getPersonalMotes();
+            personal = personal - amount;
+            setPersonalMotes(Math.max(0, personal));
+            return 0;
+        }
+    }
 
     public int recoverMotes(int amount){
         int maxEssence = getPeripheralMax() + getPersonalMax();
@@ -169,15 +190,16 @@ private char[][] healthLevels;*/
             return -1;
         }
 
-        if(getPeripheralMax() >= amount + getPeripheralMotes()){
-            setPeripheralMotes(amount + getPeripheralMotes());
+        if(getPersonalMax() >= amount + getPersonalMotes()){
+            setPersonalMotes(amount + getPersonalMotes());
             return 0;
         } else {
-            amount = amount - (getPeripheralMax() - getPeripheralMotes());
-            setPeripheralMotes(getPeripheralMax());
-            setPersonalMotes(Math.min(getPersonalMax(), getPersonalMotes() + amount));
+            amount = amount - (getPersonalMax() - getPersonalMotes());
+            setPersonalMotes(getPersonalMax());
+            setPeripheralMotes(Math.min(getPeripheralMax(), getPeripheralMotes() + amount));
             return 1;
         }
+
     }
 
     public String getAnimaEffect(){
