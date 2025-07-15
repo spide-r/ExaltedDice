@@ -260,11 +260,20 @@ public class Combat {
     }
 
     public void removeFromCombat(String actor){
+        HashSet<Integer> ticksToRemove = new HashSet<>();
         getTickList().forEach((tick, hashSet) -> {
             if(tick > currentTick){
                 hashSet.remove(actor);
             }
+            if(hashSet.isEmpty()){
+                ticksToRemove.add(tick);//if ticks are empty after actor removal - no need to save this tick since nothing happens
+            }
         });
+
+        ticksToRemove.forEach(t -> {
+            getTickList().remove(t);
+        });
+
         writeJSON();
     }
 
