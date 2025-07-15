@@ -38,7 +38,10 @@ public class Delay extends SlashCommand {
 
 
         int ticksToDelay = event.getOption("delay", Constants.DEFAULT_TICK, OptionMapping::getAsInt);
-        String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);
+        String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString).trim();
+        if(name.matches("<@\\d+>")){
+            name = name.substring(2, name.length()-1);
+        }
         int newTick = combat.delay(ticksToDelay, name);
 
         try {

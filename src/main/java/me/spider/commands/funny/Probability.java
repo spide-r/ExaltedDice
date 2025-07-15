@@ -32,8 +32,8 @@ public class Probability extends SlashCommand {
         boolean doubleHit = event.getOption("doublehit", true, OptionMapping::getAsBoolean);
         double percent = getPercentSuccess(threshold, doubleHit);
         int average = getAverageHits(percent, dice);
-        String curve = (average == successes) ? "on top of" : (average > successes) ? "below" : "above";
-        event.reply("You hit " + successes + "/" + dice + ". You are " + curve + " the curve. On average, you would hit " + average + " successes.\n-# Tens are " + ((doubleHit) ? "two hits." : "one hit.") + "\n-# The success threshold is " + threshold + ".").queue();
+        String curve = (average == successes) ? "on top" : (average > successes) ? "behind" : "ahead";
+        event.reply("You hit " + successes + "/" + dice + ". You are " + curve + " of the curve. On average, you would hit " + average + " successes.\n-# Tens are " + ((doubleHit) ? "two hits." : "one hit.") + "\n-# The success threshold is " + threshold + ".").queue();
     }
 
     public int getAverageHits(double percentSuccess, int dice){
