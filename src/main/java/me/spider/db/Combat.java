@@ -266,7 +266,7 @@ public class Combat {
                 hashSet.remove(actor);
             }
             if(hashSet.isEmpty()){
-                ticksToRemove.add(tick);//if ticks are empty after actor removal - no need to save this tick since nothing happens
+                ticksToRemove.add(tick); //if ticks are empty after actor removal - no need to save this tick since nothing happens
             }
         });
 

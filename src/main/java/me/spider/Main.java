@@ -6,6 +6,7 @@ import me.spider.commands.Damage;
 import me.spider.commands.DiceRoll;
 import me.spider.commands.combat.CombatCmd;
 import me.spider.commands.funny.BlowOnDice;
+import me.spider.commands.funny.Probability;
 import me.spider.commands.sheets.Sheet;
 import me.spider.commands.shortcuts.*;
 import me.spider.db.ServerConfigurationManager;
@@ -28,7 +29,7 @@ public class Main {
             CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
             commandClientBuilder.setOwnerId(102845358677176320L);
             commandClientBuilder.setActivity(Activity.listening("Autochthon"));
-            commandClientBuilder.addSlashCommands(new DiceRoll(), new Damage(), new BlowOnDice(), new CombatCmd(), new Sheet(),
+            commandClientBuilder.addSlashCommands(new DiceRoll(), new Damage(), new BlowOnDice(), new Probability(), new CombatCmd(), new Sheet(),
             new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence());
             commandClientBuilder.setGuildSettingsManager(new ServerConfigurationManager());
             cc = commandClientBuilder.build();
