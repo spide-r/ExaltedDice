@@ -79,7 +79,7 @@ public class GenericRoll {
          targetChanged = "\n### :white_check_mark: Target Number: {" + this.targetNumber + "}";
         }
 
-        return ((privateRoll) ? ":ghost: " : ":pencil: ")+ label + "\n:game_die: " + rolls + " " + targetChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
+        return ((privateRoll) ? ":ghost: " : ":pencil: ")+ label + "\n:game_die: **(" + dice.size() + "):** " + rolls + " " + targetChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
     }
 
     public boolean isBotch(){
