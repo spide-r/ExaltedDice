@@ -22,6 +22,8 @@ import java.io.IOException;
 public class Main {
     public static Roller roller;
     public static CommandClient cc;
+    //todo: saving health levels doesnt work
+    //todo: we'll need to make sure the main db is migrated *again*
     public static void main(String[] args) {
         try {
             roller = new Roller();
@@ -30,7 +32,7 @@ public class Main {
             commandClientBuilder.setOwnerId(102845358677176320L);
             commandClientBuilder.setActivity(Activity.listening("Autochthon"));
             commandClientBuilder.addSlashCommands(new DiceRoll(), new Damage(), new BlowOnDice(), new Probability(), new CombatCmd(), new Sheet(),
-            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence());
+            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence(), new SetHealthLevels(), new Heal(), new DamageBox());
             commandClientBuilder.setGuildSettingsManager(new ServerConfigurationManager());
             cc = commandClientBuilder.build();
 

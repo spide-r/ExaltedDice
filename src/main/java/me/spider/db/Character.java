@@ -1,7 +1,16 @@
 package me.spider.db;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.text.Style;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @DatabaseTable(tableName = "characters")
 public class Character {
@@ -27,7 +36,72 @@ public class Character {
     private int willpower = 0;
     @DatabaseField
     private int limitbreak = 0;
+    @DatabaseField
+    private String filledBoxesJSON;
+    @DatabaseField
+    private String healthLevelsJSON;
 
+    private ArrayList<java.lang.Character> filledBoxes = null;
+    private ArrayList<Integer> healthLevels = null;
+
+    public String getFilledBoxesJSON() {
+        return filledBoxesJSON;
+    }
+
+    public void setFilledBoxesJSON(String filledBoxesJSON) {
+        this.filledBoxesJSON = filledBoxesJSON;
+    }
+
+    public String getHealthLevelsJSON() {
+        return healthLevelsJSON;
+    }
+
+    public void setHealthLevelsJSON(String healthLevelsJSON) {
+        this.healthLevelsJSON = healthLevelsJSON;
+    }
+
+    // 0, 1, 2, 4, Incapacitated (5)
+    public String arrayListToJSON(ArrayList<java.lang.Character> arr){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(arr);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public String arrayListToJSONInt(ArrayList<Integer> arr){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(arr);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public ArrayList<java.lang.Character> jsonToArrayList(String json){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(json, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public ArrayList<Integer> jsonToArrayListInt(String json){
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(json, new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
     public int getInt(String type){
         return switch (type){
             case "personalMotes" -> getPersonalMotes();
@@ -42,6 +116,107 @@ public class Character {
         };
     }
 
+    public String getFancyBoxes(){
+        ArrayList<Integer> healthLevels = getHealthLevels();
+        ArrayList<java.lang.Character> filledBoxes = getFilledBoxes();
+        StringBuilder boxBuilder = new StringBuilder();
+
+        boxBuilder.append("Health Levels:\n");
+        int currentBox = 0;
+        for (int i = 0; i < healthLevels.size(); i++) {
+            if (i == 3) {
+                continue;
+            }
+            int boxes = healthLevels.get(i);
+            StringBuilder rowBuilder = new StringBuilder();
+            if (i == 5) {
+                rowBuilder.append("Incap: ");
+            } else if(i == 6){
+                rowBuilder.append("Dying: ");
+            } else {
+                rowBuilder.append("-").append(i).append(": ");
+            }
+            for (int j = 0; j < boxes; j++) {
+                char box;
+                if (filledBoxes.size() <= currentBox) {
+                    box = ' ';
+                } else {
+                    box = filledBoxes.get(currentBox);
+                }
+                rowBuilder.append("[").append(box).append("] ");
+                currentBox++;
+            }
+            if (i == 6) {
+                boxBuilder.append(rowBuilder);
+            } else {
+                boxBuilder.append(rowBuilder).append("\n");
+            }
+        }
+        return boxBuilder.toString();
+    }
+
+    public ArrayList<java.lang.Character> getFilledBoxes() {
+        if(filledBoxes == null){
+            if(filledBoxesJSON == null || filledBoxesJSON.equalsIgnoreCase("null")){
+                filledBoxes = new ArrayList<>();
+            }else {
+                filledBoxes = jsonToArrayList(filledBoxesJSON);
+            }
+        }
+        if(filledBoxes == null){
+            return new ArrayList<>();
+        }
+        return filledBoxes;
+    }
+
+
+
+    Logger LOG = LoggerFactory.getLogger(Character.class);
+    public ArrayList<Integer> getHealthLevels() {
+        if(healthLevels == null){
+            if(healthLevelsJSON == null || healthLevelsJSON.equalsIgnoreCase("null")){
+                healthLevels = new ArrayList<>();
+                fillHealthLevels(healthLevels);
+            } else {
+                healthLevels = jsonToArrayListInt(healthLevelsJSON);
+            }
+        }
+        if(healthLevels == null){
+            ArrayList<Integer> ll = new ArrayList<>();
+            fillHealthLevels(ll);
+            return ll;
+        }
+        return healthLevels;
+    }
+
+    private void fillHealthLevels(ArrayList<Integer> ll){
+        ll.add(1); //-0
+        ll.add(1); //-1
+        ll.add(1); //-2
+        ll.add(-1); //-3 (nonexistent
+        ll.add(1); //-4
+        ll.add(1); //incap (-5)
+        ll.add(1); //dying (-6)
+    }
+
+    private void saveLists(){ //todo: sloppy
+        healthLevelsJSON = arrayListToJSONInt(healthLevels);
+        filledBoxesJSON = arrayListToJSON(filledBoxes);
+    }
+
+    public boolean setHealthLevel(int level, int value){
+        if(level > 6 || level < 0){
+            return false;
+        }
+        setHealthLevel(level, value, getHealthLevels());
+        return true;
+    }
+
+    private void setHealthLevel(int level, int value, ArrayList<Integer> list){
+        list.set(level, value);
+        saveLists();
+    }
+
     public void setInt(String type, int value){
         switch (type){
             case "personalMotes" -> setPersonalMotes(value);
@@ -54,12 +229,106 @@ public class Character {
             case "limitbreak" -> setLimitbreak(value);
         };
     }
-/*
-@DatabaseField
-private char[] filledBoxes; //todo later - might need to represent them in a different way
 
-@DatabaseField
-private char[][] healthLevels;*/
+    private void addBashing(){
+        getFilledBoxes().add('B'); //bashing damage is the lowest priority
+        trimList();
+    }
+
+    private void addLethal(){
+
+        int earliestLethalBashing = 0;
+        for (int i = 0; i < getFilledBoxes().size(); i++) {
+            earliestLethalBashing = i;
+            char c = getFilledBoxes().get(i);
+            if(c == 'B' || c == 'L'){
+                break;
+            }
+        }
+        getFilledBoxes().add(earliestLethalBashing, 'L');
+        trimList();
+    }
+
+    public void takeAggravated(int amt){
+        if(amt <= 0){
+            return;
+        }
+        for (int i = 0; i < amt; i++) {
+            addAggravated();
+        }
+    }
+
+    public void takeBashing(int amt){
+        if(amt <= 0){
+            return;
+        }
+        for (int i = 0; i < amt; i++) {
+            addBashing();
+        }
+    }
+
+    public void takeLethal(int amt){
+        if(amt <= 0){
+            return;
+        }
+        for (int i = 0; i < amt; i++) {
+            addLethal();
+        }
+    }
+    private void addAggravated(){
+        getFilledBoxes().add(0, 'A'); //aggravated damage always takes priority
+        trimList();
+    }
+
+    public void removeBashing(int amt){
+        removeLevel('B', amt);
+    }
+
+    public void removeAggravated(int amt){
+        removeLevel('A', amt);
+    }
+
+    public void removeLethal(int amt){
+        removeLevel('L', amt);
+    }
+
+    public boolean removeLevel(char type, int amount){
+        int amt = amount;
+        if(amount < 1){
+            return false;
+        }
+        for (int i = 0; i < getFilledBoxes().size(); i++) {
+            char c = getFilledBoxes().get(i);
+            if(amt <= 0){
+                break;
+            }
+            if(c == type){
+                getFilledBoxes().set(i, '_');
+                amt--;
+            }
+        }
+        trimList();
+        return true;
+    }
+
+
+    public void trimList(){
+       int totalBoxes = 0;
+        ArrayList<Integer> levels = getHealthLevels();
+        for (int i = 0; i < levels.size(); i++) {
+            if(i == 3){
+                continue;
+            }
+            Integer healthLevel = levels.get(i);
+            totalBoxes += healthLevel;
+        }
+        if(getFilledBoxes().size() > totalBoxes){
+            filledBoxes = new ArrayList<>(getFilledBoxes().subList(0, totalBoxes));
+        }
+        getFilledBoxes().removeIf(c -> c == '_');
+        saveLists();
+    }
+
     public Character(){
     }
 

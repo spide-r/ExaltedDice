@@ -50,7 +50,6 @@ public class Probability extends SlashCommand {
                 totalHits++;
             }
         }
-        System.out.println(totalHits);
         return totalHits / 10;
     }
 }

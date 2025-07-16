@@ -26,9 +26,7 @@ public class Combat {
     @DatabaseField
     private String joinCombatJSON;
 
-    //@DatabaseField(dataType = DataType.SERIALIZABLE)
-    private TreeMap<Integer, HashSet<String>> tickList = null; //todo determine if these serialize well
-    //@DatabaseField(dataType = DataType.SERIALIZABLE)
+    private TreeMap<Integer, HashSet<String>> tickList = null;
     private TreeMap<Integer, HashSet<String>> joinCombat = null;
 
     public Combat(){

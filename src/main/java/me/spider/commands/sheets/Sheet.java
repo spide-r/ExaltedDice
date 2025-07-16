@@ -9,7 +9,7 @@ public class Sheet extends SlashCommand {
     public Sheet(){
         this.name = "sheet";
         this.help = "Commands relating to your character sheet.";
-        this.children = new SlashCommand[]{new GetAttribute(), new SheetHelp(), new ModifyAttribute(), new SetAttribute()};
+        this.children = new SlashCommand[]{new GetAttribute(), new SheetHelp(), new ModifyAttribute(), new SetAttribute(), new Health()};
     }
     @Override
     protected void execute(SlashCommandEvent event) {
