@@ -17,7 +17,7 @@ public class DiceRoll extends SlashCommand {
          this.options.add(new OptionData(OptionType.INTEGER, "amount", "Amount Of Dice", true));
          this.options.add(new OptionData(OptionType.STRING, "label", "Describe what this dice roll is for", false, false));
          this.options.add(new OptionData(OptionType.INTEGER, "successes", "Amount of Automatic Successes", false, false));
-         this.options.add(new OptionData(OptionType.INTEGER, "threshold", "If the success threshold needs to be changed, change it here.", false, false));
+         this.options.add(new OptionData(OptionType.INTEGER, "target", "If the target number needs to be changed, change it here.", false, false));
          this.options.add(new OptionData(OptionType.BOOLEAN, "private", "If the dice roll should be shown only to you.", false, false));
     }
 
@@ -25,10 +25,10 @@ public class DiceRoll extends SlashCommand {
     protected void execute(SlashCommandEvent event) {
         int amount = event.getOption("amount", Constants.DICE_AMOUNT, OptionMapping::getAsInt);
         int successes = event.getOption("successes", Constants.SUCCESSES, OptionMapping::getAsInt);
-        int threshold = event.getOption("threshold", Constants.SUCCESS_THRESHOLD, OptionMapping::getAsInt);
+        int target = event.getOption("target", Constants.TARGET_NUMBER, OptionMapping::getAsInt);
         String label = event.getOption("label", Constants.DEFAULT_LABEL, OptionMapping::getAsString);
         boolean privateRoll = event.getOption("private",Constants.PRIVATE_ROLL, OptionMapping::getAsBoolean);
-        Roll roll = new Roll(amount, successes, threshold, label, privateRoll);
+        Roll roll = new Roll(amount, successes, target, label, privateRoll);
         String results = roll.getStringResult();
         event.reply(results).setEphemeral(privateRoll).queue();
     }

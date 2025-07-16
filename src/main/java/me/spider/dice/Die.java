@@ -2,14 +2,14 @@ package me.spider.dice;
 
 public class Die {
     private int value;
-    private final int successThreshold;
-    public Die(int value, int successThreshold){
+    private final int targetNumber;
+    public Die(int value, int targetNumber){
         this.value = value;
-        this.successThreshold = successThreshold;
+        this.targetNumber = targetNumber;
     }
 
     public boolean success(){
-        return value >= successThreshold;
+        return value >= targetNumber;
     }
 
     public int getValue(){

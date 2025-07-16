@@ -54,9 +54,10 @@ public class Character {
             case "limitbreak" -> setLimitbreak(value);
         };
     }
-    /*
+/*
 @DatabaseField
-private char[] filledBoxes; todo later - might need to represent them in a different way
+private char[] filledBoxes; //todo later - might need to represent them in a different way
+
 @DatabaseField
 private char[][] healthLevels;*/
     public Character(){

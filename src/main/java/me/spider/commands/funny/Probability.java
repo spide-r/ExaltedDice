@@ -13,7 +13,7 @@ public class Probability extends SlashCommand {
         this.help = "Checks your luck against the mean.";
         this.options.add(new OptionData(OptionType.INTEGER, "successes", "How many successes did you hit?", true));
         this.options.add(new OptionData(OptionType.INTEGER, "dice", "How many dice did you throw?", true));
-        this.options.add(new OptionData(OptionType.INTEGER, "threshold", "What is your success threshold?"));
+        this.options.add(new OptionData(OptionType.INTEGER, "target", "What is your success target number?"));
         this.options.add(new OptionData(OptionType.BOOLEAN, "doublehit", "Do 10's count as a double hit?"));
     }
     @Override
@@ -24,26 +24,26 @@ public class Probability extends SlashCommand {
             return;
         }
         int successes = event.getOption("successes", Constants.SUCCESSES, OptionMapping::getAsInt);
-        int threshold = event.getOption("threshold", Constants.SUCCESS_THRESHOLD, OptionMapping::getAsInt);
-        if(threshold > 9 || threshold < 1 ){
-            event.reply("The success threshold must be between 1 and 9").queue();
+        int target = event.getOption("target", Constants.TARGET_NUMBER, OptionMapping::getAsInt);
+        if(target > 9 || target < 1 ){
+            event.reply("The success target must be between 1 and 9").queue();
             return;
         }
         boolean doubleHit = event.getOption("doublehit", true, OptionMapping::getAsBoolean);
-        double percent = getPercentSuccess(threshold, doubleHit);
+        double percent = getPercentSuccess(target, doubleHit);
         int average = getAverageHits(percent, dice);
         String curve = (average == successes) ? "on top" : (average > successes) ? "behind" : "ahead";
-        event.reply("You hit " + successes + "/" + dice + ". You are " + curve + " of the curve. On average, you would hit " + average + " successes.\n-# Tens are " + ((doubleHit) ? "two hits." : "one hit.") + "\n-# The success threshold is " + threshold + ".").queue();
+        event.reply("You hit " + successes + "/" + dice + ". You are " + curve + " of the curve. On average, you would hit " + average + " successes.\n-# Tens are " + ((doubleHit) ? "two hits." : "one hit.") + "\n-# The success target is " + target + ".").queue();
     }
 
     public int getAverageHits(double percentSuccess, int dice){
         return (int) Math.floor(percentSuccess * dice);
     }
 
-    public double getPercentSuccess(int threshold, boolean tensAreDouble){
+    public double getPercentSuccess(int target, boolean tensAreDouble){
         double totalHits = 0;
         for (int i = 1; i <= 10; i++) {
-            if(i >= threshold){
+            if(i >= target){
                 totalHits++;
             }
             if(tensAreDouble && i == 10){

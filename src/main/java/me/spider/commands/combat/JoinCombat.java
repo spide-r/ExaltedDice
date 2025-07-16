@@ -36,7 +36,7 @@ public class JoinCombat extends SlashCommand {
         }
         Combat combat = sc.getCombat(event.getChannelId());
         try{
-            Roll roll = new Roll(dv, success, Constants.SUCCESS_THRESHOLD, label, false);
+            Roll roll = new Roll(dv, success, Constants.TARGET_NUMBER, label, false);
             int successes = roll.getHitsAndAutoSuccesses();
             boolean result = combat.joinCombat(name, successes);
             if(result){

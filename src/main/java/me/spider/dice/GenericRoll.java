@@ -13,15 +13,15 @@ public class GenericRoll {
     boolean privateRoll;
     String label;
     int autoSuccesses;
-    int successThreshold;
-    public GenericRoll(int amt, int autoSuccesses, int successThreshold, boolean tensAreOneHit, String label, boolean privateRoll){
+    int targetNumber;
+    public GenericRoll(int amt, int autoSuccesses, int targetNumber, boolean tensAreOneHit, String label, boolean privateRoll){
         for (int i = 0; i < amt; i++) {
-            Die d = new Die(Roller.rollDie(), successThreshold);
+            Die d = new Die(Roller.rollDie(), targetNumber);
             dice.add(d);
         }
         this.autoSuccesses = autoSuccesses;
         this.tensAreOneHit = tensAreOneHit;
-        this.successThreshold = successThreshold;
+        this.targetNumber = targetNumber;
         this.label = label;
         this.privateRoll = privateRoll;
     }
@@ -74,12 +74,12 @@ public class GenericRoll {
         String hitStr = hits + ((autoSuccesses != 0) ? ((autoSuccesses>0) ? " + " : " - ") + Math.abs(autoSuccesses) + " :star: **" + finalHits +"** :star:" : "");
         String label = getLabel();
 
-        String thresholdChanged = "";
-        if(this.successThreshold != Constants.SUCCESS_THRESHOLD){
-         thresholdChanged = "\n### :white_check_mark: Success Threshold: {" + this.successThreshold + "}";
+        String targetChanged = "";
+        if(this.targetNumber != Constants.TARGET_NUMBER){
+         targetChanged = "\n### :white_check_mark: Target Number: {" + this.targetNumber + "}";
         }
 
-        return ((privateRoll) ? ":ghost: " : ":pencil: ")+ label + "\n:game_die: " + rolls + " " + thresholdChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
+        return ((privateRoll) ? ":ghost: " : ":pencil: ")+ label + "\n:game_die: " + rolls + " " + targetChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
     }
 
     public boolean isBotch(){
