@@ -33,7 +33,8 @@ public class Probability extends SlashCommand {
         double percent = getPercentSuccess(target, doubleHit);
         int average = getAverageHits(percent, dice);
         String curve = (average == successes) ? "on top" : (average > successes) ? "behind" : "ahead";
-        event.reply("You hit " + successes + "/" + dice + ". You are " + curve + " of the curve. On average, you would hit " + average + " successes.\n-# Tens are " + ((doubleHit) ? "two hits." : "one hit.") + "\n-# The success target is " + target + ".").queue();
+        String funny = (successes == dice) ? "Plentimon smiles upon you." : (successes > dice) ? "Begone foul anathema!" : (successes <= 1 && dice >= 3) ? "Blame Spider" : "";
+        event.reply("You hit " + successes + "/" + dice + ". You are " + curve + " of the curve. On average, you would hit " + average + " successes.\n-# Tens are " + ((doubleHit) ? "two hits." : "one hit.") + "\n-# The success target is " + target + ".\n-#" + funny).queue();
     }
 
     public int getAverageHits(double percentSuccess, int dice){
