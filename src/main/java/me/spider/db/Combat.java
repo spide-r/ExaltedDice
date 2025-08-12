@@ -242,7 +242,13 @@ public class Combat {
 
     public HashSet<String> getParticipantsThatJoinedCombat(){
         HashSet<String> participants = new HashSet<>();
-        getJoinCombat().forEach((tick, pp) -> participants.addAll(pp));
+        for (Map.Entry<Integer, HashSet<String>> entry : getJoinCombat().entrySet()) {
+            Integer tick = entry.getKey();
+            HashSet<String> pp = entry.getValue();
+            for(String s : pp){
+                participants.add(s + " (Tick " + tick + ")");
+            }
+        }
         return participants;
     }
 
@@ -276,6 +282,9 @@ public class Combat {
     }
 
     public String getActorsAt(int tick){
+        if(isStartOfCombat()){
+            return "Combat has not started! Did you mean to run `/combat ready`?";
+        }
         HashSet<String> participants = getTickActorsAt(tick);
         StringBuilder builder = new StringBuilder();
         participants.forEach(p -> {
@@ -290,6 +299,9 @@ public class Combat {
 
 
     public String getAllActorsNextTick(){
+        if(isStartOfCombat()){
+            return "Combat has not started! Did you mean to run `/combat ready`?";
+        }
         TreeMap<Integer, HashSet<String>> nextTicks = getAllActorsNextTickTreeMap();
         StringBuilder builder = new StringBuilder();
         nextTicks.forEach((tick, actors) -> {
@@ -308,8 +320,10 @@ public class Combat {
         return builder.toString();
     }
     public String getNextSixTicks(){
+        if(isStartOfCombat()){
+            return "Combat has not started! Did you mean to run `/combat ready`?";
+        }
         int currentTick = getCurrentTick();
-
         StringBuilder builder = new StringBuilder();
         for (int i = currentTick+1; i < currentTick+7; i++) {
             builder.append(":crossed_swords: ").append(i).append("\n");
