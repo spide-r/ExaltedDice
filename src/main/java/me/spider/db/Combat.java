@@ -242,13 +242,7 @@ public class Combat {
 
     public HashSet<String> getParticipantsThatJoinedCombat(){
         HashSet<String> participants = new HashSet<>();
-        for (Map.Entry<Integer, HashSet<String>> entry : getJoinCombat().entrySet()) {
-            Integer tick = entry.getKey();
-            HashSet<String> pp = entry.getValue();
-            for(String s : pp){
-                participants.add(s + " (Tick " + tick + ")");
-            }
-        }
+        getJoinCombat().forEach((tick, pp) -> participants.addAll(pp));
         return participants;
     }
 
