@@ -1,4 +1,4 @@
-package me.spider.commands.shortcuts;
+package me.spider.commands.health;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.sql.SQLException;
-import java.util.logging.Logger;
 
 public class SetHealthLevels extends SlashCommand {
     public SetHealthLevels(){
@@ -70,7 +69,6 @@ public class SetHealthLevels extends SlashCommand {
         try {
             c.saveCharacter(ch);
         } catch (SQLException e) {
-            e.printStackTrace();
             event.reply("Issue setting attribute!").queue();
         }
 

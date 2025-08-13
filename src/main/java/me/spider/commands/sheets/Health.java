@@ -15,6 +15,6 @@ public class Health extends SlashCommand {
     protected void execute(SlashCommandEvent event) {
         ServerConfiguration c = Main.cc.getSettingsFor(event.getGuild());
         Character ch = c.getCharacter(event.getUser().getId());
-        event.reply(ch.getFancyBoxes()).queue();
+        event.reply(ch.getFancyDamageBoxes()).queue();
     }
 }

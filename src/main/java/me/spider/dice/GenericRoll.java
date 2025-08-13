@@ -36,11 +36,32 @@ public class GenericRoll {
                     .append((success) ? "**" : "")
                     .append(die.getValue()).append((success) ? "**" : "")
                     .append((doubleSuccess) ? "__" : "")
-                    .append(", "); //I need to get better at this situation.
+                    .append(", ");
         });
 
         String rolls = builder.toString();
-        rolls = rolls.replaceFirst(", $", "");
+        rolls = rolls.substring(0, rolls.length()-2);
+        return rolls;
+    }
+
+    public String getCompressedRolls(){
+        StringBuilder builder = new StringBuilder();
+        int[] amount = new int[11];
+        dice.forEach( die -> amount[die.getValue()] += 1);
+        for (int i = 1; i < amount.length ; i++) {
+            boolean success = i >= targetNumber;
+            boolean doubleSuccess = !tensAreOneHit && i == 10;
+            builder
+                    .append((doubleSuccess) ? "__" : "")
+                    .append((success) ? "**" : "")
+                    .append("`").append(amount[i]).append("` ").append(numberToWord(i))
+                    .append((success) ? "**" : "")
+                    .append((doubleSuccess) ? "__" : "")
+                    .append(", ");
+        }
+
+        String rolls = builder.toString();
+        rolls = rolls.substring(0, rolls.length()-2);
         return rolls;
     }
 
@@ -59,6 +80,22 @@ public class GenericRoll {
         return hits;
     }
 
+    private String numberToWord(int i){
+        return switch (i) {
+            case 1 -> "Ones";
+            case 2 -> "Twos";
+            case 3 -> "Threes";
+            case 4 -> "Fours";
+            case 5 -> "Fives";
+            case 6 -> "Sixes";
+            case 7 -> "Sevens";
+            case 8 -> "Eights";
+            case 9 -> "Nines";
+            case 10 -> "Tens";
+            default -> "unknown";
+        };
+    }
+
     public int getHitsAndAutoSuccesses(){
         return getHits() + autoSuccesses;
     }
@@ -68,7 +105,8 @@ public class GenericRoll {
     }
 
     public String getStringResult(){
-        String rolls = getRolls();
+        boolean compress = dice.size() > 50;
+        String rolls = (compress) ? getCompressedRolls() : getRolls();
         int hits = getHits();
         int finalHits = hits + autoSuccesses;
         String hitStr = hits + ((autoSuccesses != 0) ? ((autoSuccesses>0) ? " + " : " - ") + Math.abs(autoSuccesses) + " :star: **" + finalHits +"** :star:" : "");
@@ -81,6 +119,7 @@ public class GenericRoll {
 
         return ((privateRoll) ? ":ghost: " : ":pencil: ")+ label + "\n:game_die: **(" + dice.size() + "):** " + rolls + " " + targetChanged + "\n:dart: " + hitStr + ((isBotch()) ? "\n:x: Botch!" : "");
     }
+
 
     public boolean isBotch(){
         if(tensAreOneHit){ //damage rolls do nothing on a botch, so dont bother highlighting them

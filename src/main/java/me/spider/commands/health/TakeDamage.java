@@ -1,13 +1,13 @@
-package me.spider.commands.shortcuts;
+package me.spider.commands.health;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 
-public class DamageBox extends SlashCommand {
-    public DamageBox(){
+public class TakeDamage extends SlashCommand {
+    public TakeDamage(){
         this.name = "takedamage";
         this.help = "Takes damage";
-        this.children = new SlashCommand[]{new TakeDamage("bashing"), new TakeDamage("aggravated"), new TakeDamage("lethal")};
+        this.children = new SlashCommand[]{new TakeDamageBox("bashing"), new TakeDamageBox("aggravated"), new TakeDamageBox("lethal")};
 
     }
     @Override

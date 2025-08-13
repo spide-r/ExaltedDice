@@ -7,6 +7,9 @@ import me.spider.commands.DiceRoll;
 import me.spider.commands.combat.CombatCmd;
 import me.spider.commands.funny.BlowOnDice;
 import me.spider.commands.funny.Probability;
+import me.spider.commands.health.TakeDamage;
+import me.spider.commands.health.Heal;
+import me.spider.commands.health.SetHealthLevels;
 import me.spider.commands.sheets.Sheet;
 import me.spider.commands.shortcuts.*;
 import me.spider.db.ServerConfigurationManager;
@@ -22,8 +25,6 @@ import java.io.IOException;
 public class Main {
     public static Roller roller;
     public static CommandClient cc;
-    //todo: saving health levels doesnt work
-    //todo: we'll need to make sure the main db is migrated *again*
     public static void main(String[] args) {
         try {
             roller = new Roller();
@@ -32,7 +33,7 @@ public class Main {
             commandClientBuilder.setOwnerId(102845358677176320L);
             commandClientBuilder.setActivity(Activity.listening("Autochthon"));
             commandClientBuilder.addSlashCommands(new DiceRoll(), new Damage(), new BlowOnDice(), new Probability(), new CombatCmd(), new Sheet(),
-            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence(), new SetHealthLevels(), new Heal(), new DamageBox());
+            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence(), new SetHealthLevels(), new Heal(), new TakeDamage(), new Limit(), new Willpower());
             commandClientBuilder.setGuildSettingsManager(new ServerConfigurationManager());
             cc = commandClientBuilder.build();
 

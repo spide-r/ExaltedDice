@@ -5,12 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.swing.text.Style;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @DatabaseTable(tableName = "characters")
 public class Character {
@@ -34,6 +30,8 @@ public class Character {
     private int otherMax = 0;
     @DatabaseField
     private int willpower = 0;
+    @DatabaseField
+    private int willpowerMax = 0;
     @DatabaseField
     private int limitbreak = 0;
     @DatabaseField
@@ -104,19 +102,50 @@ public class Character {
     }
     public int getInt(String type){
         return switch (type){
-            case "personalMotes" -> getPersonalMotes();
-            case "peripheralMotes" -> getPeripheralMotes();
-            case "otherMotes" -> getOtherMotes();
-            case "personalMax" -> getPersonalMax();
-            case "peripheralMax" -> getPeripheralMax();
-            case "otherMax" -> getOtherMax();
+            case "personalMotes", "personalmotes" -> getPersonalMotes();
+            case "peripheralMotes", "peripheralmotes" -> getPeripheralMotes();
+            case "otherMotes", "othermotes" -> getOtherMotes();
+            case "personalMax", "personalmax" -> getPersonalMax();
+            case "peripheralMax", "peripheralmax" -> getPeripheralMax();
+            case "otherMax", "othermax" -> getOtherMax();
             case "willpower" -> getWillpower();
+            case "willpowerMax", "willpowermax" -> getWillpowerMax();
             case "limitbreak" -> getLimitbreak();
             default -> 0;
         };
     }
 
-    public String getFancyBoxes(){
+    public String getAllAttributes(){
+        return "## Attributes:\n### Essence:\n" + getFancyEssences() + "\n### Willpower:\n" + getFancyWillpowerBoxes() + "\n### Limit:\n" + getFancyLimitBreakBoxes();
+    }
+
+    public String getFancyWillpowerBoxes(){
+        return getFancyBoxes(willpower, willpowerMax);
+    }
+
+    public String getFancyBoxes(int target, int max){
+        if(max > 30){
+            return ("(" +  target + "/" + max + ")");
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 1; i <= max; i++) {
+            builder.append("[").append((i <= target) ? "X" : " ").append("] ");
+        }
+        return builder + " (" + target + "/" + max + ")";
+    }
+
+    public String getFancyLimitBreakBoxes(){
+        return getFancyBoxes(limitbreak, 10);
+    }
+
+    public String getFancyEssences(){
+        String personal = "Personal: " + getPersonalMotes() + "/" + getPersonalMax();
+        String peripheral = "Peripheral: " + getPeripheralMotes() + "/" + getPeripheralMax();
+        String other = "Other: " + getOtherMotes() + "/" + getOtherMax();
+        return personal + "\n" + peripheral + "\n" + other;
+    }
+
+    public String getFancyDamageBoxes(){
         ArrayList<Integer> healthLevels = getHealthLevels();
         ArrayList<java.lang.Character> filledBoxes = getFilledBoxes();
         StringBuilder boxBuilder = new StringBuilder();
@@ -171,7 +200,6 @@ public class Character {
 
 
 
-    Logger LOG = LoggerFactory.getLogger(Character.class);
     public ArrayList<Integer> getHealthLevels() {
         if(healthLevels == null){
             if(healthLevelsJSON == null || healthLevelsJSON.equalsIgnoreCase("null")){
@@ -219,13 +247,14 @@ public class Character {
 
     public void setInt(String type, int value){
         switch (type){
-            case "personalMotes" -> setPersonalMotes(value);
-            case "peripheralMotes" -> setPeripheralMotes(value);
-            case "otherMotes" -> setOtherMotes(value);
-            case "personalMax" -> setPersonalMax(value);
-            case "peripheralMax" -> setPeripheralMax(value);
-            case "otherMax" -> setOtherMax(value);
+            case "personalMotes", "personalmotes" -> setPersonalMotes(value);
+            case "peripheralMotes", "peripheralmotes" -> setPeripheralMotes(value);
+            case "otherMotes", "othermotes" -> setOtherMotes(value);
+            case "personalMax", "personalmax" -> setPersonalMax(value);
+            case "peripheralMax", "peripheralmax" -> setPeripheralMax(value);
+            case "otherMax", "othermax" -> setOtherMax(value);
             case "willpower" -> setWillpower(value);
+            case "willpowerMax", "willpowermax" -> setWillpowerMax(value);
             case "limitbreak" -> setLimitbreak(value);
         };
     }
@@ -292,10 +321,10 @@ public class Character {
         removeLevel('L', amt);
     }
 
-    public boolean removeLevel(char type, int amount){
+    public void removeLevel(char type, int amount){
         int amt = amount;
         if(amount < 1){
-            return false;
+            return;
         }
         for (int i = 0; i < getFilledBoxes().size(); i++) {
             char c = getFilledBoxes().get(i);
@@ -308,7 +337,6 @@ public class Character {
             }
         }
         trimList();
-        return true;
     }
 
 
@@ -402,6 +430,14 @@ public class Character {
         this.willpower = willpower;
     }
 
+    public int getWillpowerMax() {
+        return willpowerMax;
+    }
+    public void setWillpowerMax(int willpowerMax) {
+        this.willpowerMax = willpowerMax;
+    }
+
+
     public int getLimitbreak() {
         return limitbreak;
     }
@@ -490,6 +526,4 @@ public class Character {
 
         return "totemic (16+)";
     }
-
-
 }

@@ -1,4 +1,4 @@
-package me.spider.commands.shortcuts;
+package me.spider.commands.health;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.sql.SQLException;
 
-public class HealDamage extends SlashCommand {
-    public HealDamage(String type){
+public class HealDamageBox extends SlashCommand {
+    public HealDamageBox(String type){
         this.name = type;
         this.help = "Heals " + type + " damage ";
         this.options.add(new OptionData(OptionType.INTEGER, "amount", "How much damage did you heal?", true));
@@ -34,11 +34,10 @@ public class HealDamage extends SlashCommand {
                 ch.removeAggravated(amount);
                 break;
         }
-        event.reply("Healed " + amount + " " + this.name + " damage.\n" + ch.getFancyBoxes()).queue();
+        event.reply("Healed " + amount + " " + this.name + " damage.\n" + ch.getFancyDamageBoxes()).queue();
         try {
             c.saveCharacter(ch);
         } catch (SQLException e) {
-            e.printStackTrace();
             event.reply("Issue saving!").queue();
         }
     }

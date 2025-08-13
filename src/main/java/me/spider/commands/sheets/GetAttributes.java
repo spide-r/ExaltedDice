@@ -1,4 +1,4 @@
-package me.spider.commands.shortcuts;
+package me.spider.commands.sheets;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
@@ -6,15 +6,19 @@ import me.spider.Main;
 import me.spider.db.Character;
 import me.spider.db.ServerConfiguration;
 
-public class Essence extends SlashCommand {
-    public Essence(){
-        this.name = "essence";
-        this.help = "Shows all of your essence";
+public class GetAttributes extends SlashCommand {
+
+    public GetAttributes(){
+        this.name = "get";
+        this.help = "Gets Sheet Attributes";
     }
+
     @Override
     protected void execute(SlashCommandEvent event) {
         ServerConfiguration c = Main.cc.getSettingsFor(event.getGuild());
         Character ch = c.getCharacter(event.getUser().getId());
-        event.reply(ch.getFancyEssences()).queue();
+
+        event.reply(ch.getAllAttributes()).queue();
+
     }
 }
