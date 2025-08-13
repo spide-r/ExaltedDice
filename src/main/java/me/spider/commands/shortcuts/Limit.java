@@ -15,8 +15,8 @@ import java.sql.SQLException;
 public class Limit extends SlashCommand {
     public Limit(){
         this.name = "limit";
-        this.help = "Spends/Restores willpower by the specified amount.";
-        this.options.add(new OptionData(OptionType.INTEGER, "amount", "How much willpower?", true));
+        this.help = "Spends/Restores limit by the specified amount.";
+        this.options.add(new OptionData(OptionType.INTEGER, "amount", "How much limit?", true));
         this.options.add(new OptionData(OptionType.BOOLEAN, "restore", "Are you restoring it?"));
     }
     @Override
