@@ -29,6 +29,6 @@ public class CombatHelp extends SlashCommand {
                 
                 **/combat add** - Adds Person to tick (NOT THE SAME AS /combat join !!!! )
                 **/combat remove** - Removes person from combat (RIP)
-                """).queue();
+                """).setEphemeral(true).queue();
     }
 }

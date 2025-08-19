@@ -22,6 +22,6 @@ public class SheetHelp extends SlashCommand {
                 **/sheet health** - Shows all of your health levels. Set them with **/sethealthlevels**
                 
                 Use **/essence** to get all your essences.
-                """).queue();
+                """).setEphemeral(true).queue();
     }
 }

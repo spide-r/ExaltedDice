@@ -33,7 +33,6 @@ public class GenericSearch extends SlashCommand {
             }
             event.reply(s).setEphemeral(hide).queue();
         } catch (SQLException | NullPointerException e) {
-            e.printStackTrace();
             event.reply("Unable to find `" + toSearch + "`!").setEphemeral(hide).queue();
         }
     }
