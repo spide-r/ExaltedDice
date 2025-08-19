@@ -2,7 +2,9 @@ package me.spider.db.book;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -11,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.SQLType;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,17 +64,19 @@ public class BookManager {
     }
 
     public BookPage getPage(String name, String toSearch) throws SQLException {
+        toSearch = "%" + toSearch + "%";
         return switch (name.toLowerCase()) {
-            case "anima" -> animaDao.queryForId(toSearch);
-            case "astrology" -> astrologyDao.queryForId(toSearch);
-            case "charms", "charm" -> charmDao.queryForId(toSearch);
-            case "equipment" -> equipmentDao.queryForId(toSearch);
-            case "hearthstones", "hearthstone" -> hearthstoneDao.queryForId(toSearch);
-            case "martialarts", "marts", "mart", "martialart" -> martialArtsDao.queryForId(toSearch);
-            case "sorcery" -> sorceryDao.queryForId(toSearch);
+            case "anima" -> animaDao.queryBuilder().where().raw("LOWER(caste) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "astrology" -> astrologyDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "charms", "charm" -> charmDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "equipment" -> equipmentDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "hearthstones", "hearthstone" -> hearthstoneDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "martialarts", "marts", "mart", "martialart" -> martialArtsDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "sorcery" -> sorceryDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
             default -> null;
         };
     }
+
 
     public HashSet<String> getKeys(String name) throws SQLException {
         return switch (name.toLowerCase()) {

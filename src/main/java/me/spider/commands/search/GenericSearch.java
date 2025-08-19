@@ -44,7 +44,7 @@ public class GenericSearch extends SlashCommand {
         }
         List<Command.Choice> options = null;
         try {
-            options = Main.bookManager.getKeys(this.name).stream().filter(w -> w.contains(event.getFocusedOption().getValue()))
+            options = Main.bookManager.getKeys(this.name).stream().filter(w -> w.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(w -> new Command.Choice(w, w)).collect(Collectors.toList());
         } catch (SQLException e) {
             throw new RuntimeException(e);
