@@ -2,6 +2,7 @@ package me.spider;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.session.ShutdownEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import static me.spider.Main.cc;
@@ -34,4 +35,8 @@ public class BotEventListener extends ListenerAdapter {
          }
     }
 
+    @Override
+    public void onShutdown(ShutdownEvent event) {
+        Main.bookManager.shutdown();
+    }
 }

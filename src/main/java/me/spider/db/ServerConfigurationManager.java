@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class ServerConfigurationManager implements GuildSettingsManager<ServerConfiguration> {
-    private Statement statement;
     private ConnectionSource connection;
 
     @Override

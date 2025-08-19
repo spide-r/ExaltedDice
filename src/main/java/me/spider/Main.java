@@ -10,9 +10,11 @@ import me.spider.commands.funny.Probability;
 import me.spider.commands.health.TakeDamage;
 import me.spider.commands.health.Heal;
 import me.spider.commands.health.SetHealthLevels;
+import me.spider.commands.search.Search;
 import me.spider.commands.sheets.Sheet;
 import me.spider.commands.shortcuts.*;
 import me.spider.db.ServerConfigurationManager;
+import me.spider.db.book.BookManager;
 import me.spider.dice.Roller;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -24,16 +26,18 @@ import java.io.FileReader;
 import java.io.IOException;
 public class Main {
     public static Roller roller;
+    public static BookManager bookManager;
     public static CommandClient cc;
     public static void main(String[] args) {
         try {
             roller = new Roller();
+            bookManager = new BookManager();
 
             CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
             commandClientBuilder.setOwnerId(102845358677176320L);
-            commandClientBuilder.setActivity(Activity.listening("Autochthon"));
+            commandClientBuilder.setActivity(Activity.customStatus("Type /help!"));
             commandClientBuilder.addSlashCommands(new DiceRoll(), new Damage(), new BlowOnDice(), new Probability(), new CombatCmd(), new Sheet(),
-            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence(), new SetHealthLevels(), new Heal(), new TakeDamage(), new Limit(), new Willpower());
+            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence(), new SetHealthLevels(), new Heal(), new TakeDamage(), new Limit(), new Willpower(), new Search());
             commandClientBuilder.setGuildSettingsManager(new ServerConfigurationManager());
             cc = commandClientBuilder.build();
 
