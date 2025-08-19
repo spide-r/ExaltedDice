@@ -29,9 +29,23 @@ public class GenericSearch extends SlashCommand {
         try {
             String s = Main.bookManager.getPage(this.name, toSearch).getFancyText();
             if(s.length() > 2000){
-                s = s.substring(0, 1950) + "**[Description cut to fit Discord's limits]**";
+                if(hide){
+                    String t = s.substring(0, 1950) + "**[Description cut to fit Discord's limits]**";
+                    event.reply(t).setEphemeral(true).queue();
+                } else {
+                    event.reply(s.substring(0, 1999)).queue();
+                    int tracker = 1999;
+                    while (tracker < s.length()){
+                        int startPoint = tracker;
+                        int endPoint = Math.min(s.length() - tracker, 1999);
+                        tracker += endPoint;
+                        event.getChannel().sendMessage(s.substring(startPoint, startPoint+endPoint)).queue();
+                    }
+                }
+            } else {
+                event.reply(s).setEphemeral(hide).queue();
+
             }
-            event.reply(s).setEphemeral(hide).queue();
         } catch (SQLException | NullPointerException e) {
             event.reply("Unable to find `" + toSearch + "`!").setEphemeral(hide).queue();
         }
