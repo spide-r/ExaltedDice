@@ -33,14 +33,16 @@ public class GenericSearch extends SlashCommand {
                     String t = s.substring(0, 1950) + "**[Description cut to fit Discord's limits]**";
                     event.reply(t).setEphemeral(true).queue();
                 } else {
-                    event.reply(s.substring(0, 1999)).queue();
-                    int tracker = 1999;
-                    while (tracker < s.length()){
-                        int startPoint = tracker;
-                        int endPoint = Math.min(s.length() - tracker, 1999);
-                        tracker += endPoint;
-                        event.getChannel().sendMessage(s.substring(startPoint, startPoint+endPoint)).queue();
-                    }
+                    event.reply(s.substring(0, 1999)).queue(suc -> {
+                        int tracker = 1999;
+                        while (tracker < s.length()){
+                            int startPoint = tracker;
+                            int endPoint = Math.min(s.length() - tracker, 1999);
+                            tracker += endPoint;
+                            event.getChannel().sendMessage(s.substring(startPoint, startPoint+endPoint)).queue();
+                        }
+                    });
+
                 }
             } else {
                 event.reply(s).setEphemeral(hide).queue();
@@ -60,6 +62,9 @@ public class GenericSearch extends SlashCommand {
         try {
             options = Main.bookManager.getKeys(this.name).stream().filter(w -> w.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
                     .map(w -> new Command.Choice(w, w)).collect(Collectors.toList());
+            if(options.size() > 25){
+                options = options.subList(0,24);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
