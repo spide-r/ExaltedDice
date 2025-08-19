@@ -18,20 +18,23 @@ public class GenericSearch extends SlashCommand {
         this.name = toSearch;
         this.help = "Searches for a specified " + toSearch;
         this.options.add(new OptionData(OptionType.STRING, "name", "What are you trying to search?", true, true));
-        this.options.add(new OptionData(OptionType.BOOLEAN, "show", "Do you wish to show the result?", false));
+        this.options.add(new OptionData(OptionType.BOOLEAN, "hide", "Do you wish to hide the search?", false));
     }
     @Override
     protected void execute(SlashCommandEvent event) {
         String toSearch = event.getOption("name", "unknown", OptionMapping::getAsString);
-        boolean show = event.getOption("show", false, OptionMapping::getAsBoolean);
+        boolean hide = event.getOption("hide", false, OptionMapping::getAsBoolean);
 
 
         try {
             String s = Main.bookManager.getPage(this.name, toSearch).getFancyText();
-            event.reply(s).setEphemeral(!show).queue();
+            if(s.length() > 2000){
+                s = s.substring(0, 1950) + "**[Description cut to fit Discord's limits]**";
+            }
+            event.reply(s).setEphemeral(hide).queue();
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
-            event.reply("Unable to find `" + toSearch + "`!").setEphemeral(!show).queue();
+            event.reply("Unable to find `" + toSearch + "`!").setEphemeral(hide).queue();
         }
     }
 

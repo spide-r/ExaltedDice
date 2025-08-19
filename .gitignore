@@ -46,3 +46,4 @@ bin/
 /.idea/
 /exalted.db
 /book.db
+data/

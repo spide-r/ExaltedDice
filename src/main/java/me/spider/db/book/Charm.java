@@ -27,7 +27,7 @@ public class Charm extends BookPage{
 
     @Override
     public String getFancyText() {
-        return "## " + name + " (" + category + ")\n### " + subsection +
+        return "## " + name  + "\n### " + category + " - " + subsection +
                 "\n**Cost:** " + cost + "\n**Type:**" + type + "\n**Keywords:** " + keywords + "\n**Duration:** " + duration + "\n" + description;
     }
 

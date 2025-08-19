@@ -21,7 +21,7 @@ public class Equipment extends BookPage {
 
     @Override
     public String getFancyText() {
-        return "### " + name + "\n**Dots:** " + dots + "\n**Commitment:**" + commitment + "\n**Type:**" + type + "\n" + description;
+        return "### " + name + "\n**Dots:** " + dots + "\n**Commitment:** " + commitment + "\n**Type:** " + type + "\n" + description;
     }
 
     public String getName() {

@@ -24,8 +24,8 @@ public class MartialArts extends BookPage{
 
     @Override
     public String getFancyText() {
-        return "### " + name + "(" + style + ")" +
-                "\n**Cost:** " + cost + "\n**Type:**" + type + "\n**Keywords:** " + keywords + "\n**Duration:** " + duration + "\n**Level:** " + level+ "\n" + description;
+        return "### " + name + " (" + style + ")" +
+                "\n**Cost:** " + cost + "\n**Type:** " + type + "\n**Keywords:** " + keywords + "\n**Duration:** " + duration + "\n**Level:** " + level+ "\n" + description;
     }
 
 
