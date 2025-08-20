@@ -14,27 +14,27 @@ import java.sql.SQLException;
 public class Refresh extends SlashCommand {
     public Refresh(){
         this.name = "refresh";
-        this.help = "Refreshes essence motes to their max value. This also restores willpower and limit by default.";
-        this.options.add(new OptionData(OptionType.BOOLEAN, "wplimit", "Restore Willpower and Limit as well?"));
+        this.help = "Refreshes essence motes to their max value. This also restores willpower.";
+        this.options.add(new OptionData(OptionType.BOOLEAN, "wp", "Restore Willpower as well?"));
     }
 
     @Override
     protected void execute(SlashCommandEvent event) {
         ServerConfiguration serverConfiguration = Main.cc.getSettingsFor(event.getGuild());
-        boolean wplimit = event.getOption("wplimit", true, OptionMapping::getAsBoolean);
+        boolean wp = event.getOption("wp", true, OptionMapping::getAsBoolean);
 
         Character c = serverConfiguration.getCharacter(event.getUser().getId());
         c.setPeripheralMotes(c.getPeripheralMax());
         c.setPersonalMotes(c.getPersonalMax());
         c.setOtherMotes(c.getOtherMax());
-        if(wplimit){
-            c.setWillpower(0);
-            c.setLimitbreak(0);
+        if(wp){
+            c.setWillpower(10);
+            //c.setLimitbreak(0);
         }
 
         try {
             serverConfiguration.saveCharacter(c);
-            event.reply("All essences have been refreshed." + ((wplimit) ? "Willpower and limit has been restored." : "")).queue();
+            event.reply("All essences have been refreshed." + ((wp) ? "Willpower has been restored." : "")).queue();
 
         } catch (SQLException e) {
             event.reply("Error refreshing essence!").queue();

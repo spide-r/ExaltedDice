@@ -8,16 +8,8 @@ import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.SQLType;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class BookManager {
     private final ConnectionSource connection;
@@ -29,6 +21,9 @@ public class BookManager {
     Dao<Hearthstone, String> hearthstoneDao;
     Dao<MartialArts, String> martialArtsDao;
     Dao<Sorcery, String> sorceryDao;
+    Dao<Knack, String> knackDao;
+    Dao<Submodule, String> submoduleDao;
+    Dao<Excellency, String> excellencyDao;
 
     private final HashSet<String> animaKeys = new HashSet<>();
     private final HashSet<String> astrologyKeys = new HashSet<>();
@@ -37,6 +32,9 @@ public class BookManager {
     private final HashSet<String> hearthstoneKeys = new HashSet<>();
     private final HashSet<String> martsKeys = new HashSet<>();
     private final HashSet<String> sorceryKeys = new HashSet<>();
+    private final HashSet<String> knackKeys = new HashSet<>();
+    private final HashSet<String> submoduleKeys = new HashSet<>();
+    private final HashSet<String> excellencyKeys = new HashSet<>();
 
     public BookManager(){
         try {
@@ -48,6 +46,10 @@ public class BookManager {
             TableUtils.createTableIfNotExists(connection, Hearthstone.class);
             TableUtils.createTableIfNotExists(connection, MartialArts.class);
             TableUtils.createTableIfNotExists(connection, Sorcery.class);
+            TableUtils.createTableIfNotExists(connection, Sorcery.class);
+            TableUtils.createTableIfNotExists(connection, Knack.class);
+            TableUtils.createTableIfNotExists(connection, Submodule.class);
+            TableUtils.createTableIfNotExists(connection, Excellency.class);
 
             animaDao = DaoManager.createDao(connection, Anima.class);
             astrologyDao = DaoManager.createDao(connection, AstrologyCollege.class);
@@ -56,6 +58,9 @@ public class BookManager {
             hearthstoneDao = DaoManager.createDao(connection, Hearthstone.class);
             martialArtsDao = DaoManager.createDao(connection, MartialArts.class);
             sorceryDao = DaoManager.createDao(connection, Sorcery.class);
+            knackDao = DaoManager.createDao(connection, Knack.class);
+            submoduleDao = DaoManager.createDao(connection, Submodule.class);
+            excellencyDao = DaoManager.createDao(connection, Excellency.class);
 
             loadKeys();
         } catch (SQLException e) {
@@ -73,6 +78,9 @@ public class BookManager {
             case "hearthstones", "hearthstone" -> hearthstoneDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
             case "martialarts", "marts", "mart", "martialart" -> martialArtsDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
             case "sorcery" -> sorceryDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "knack", "knacks" -> knackDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "submodule", "submodules" -> submoduleDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
+            case "excellencies", "excellency" -> excellencyDao.queryBuilder().where().raw("LOWER(name) LIKE ?", new SelectArg(SqlType.STRING, toSearch.toLowerCase())).queryForFirst();
             default -> null;
         };
     }
@@ -87,6 +95,9 @@ public class BookManager {
             case "hearthstones", "hearthstone" -> hearthstoneKeys;
             case "martialarts", "marts", "mart", "martialart" -> martsKeys;
             case "sorcery" -> sorceryKeys;
+            case "knack", "knacks" -> knackKeys;
+            case "submodule", "submodules" -> submoduleKeys;
+            case "excellencies", "excellency" -> excellencyKeys;
             default -> null;
         };
     }
@@ -99,6 +110,8 @@ public class BookManager {
         hearthstoneDao.queryForAll().forEach( h -> hearthstoneKeys.add(h.getName()));
         martialArtsDao.queryForAll().forEach( m -> martsKeys.add(m.getName()));
         sorceryDao.queryForAll().forEach( s -> sorceryKeys.add(s.getName()));
+        knackDao.queryForAll().forEach( s -> knackKeys.add(s.getName()));
+        excellencyDao.queryForAll().forEach( s -> excellencyKeys.add(s.getName()));
     }
 
     public Dao<Anima, String> getAnimaDao() {

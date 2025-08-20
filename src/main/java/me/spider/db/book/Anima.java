@@ -42,6 +42,6 @@ public class Anima extends BookPage{
     @Override
     public String getFancyText() {
         return "### " + caste + "\n" + power +
-                ((otherInfo == null || otherInfo.equalsIgnoreCase("null") || otherInfo.equalsIgnoreCase("")) ? "" : "\nOther Info:" + otherInfo);
+                ((otherInfo == null || otherInfo.equalsIgnoreCase("null") || otherInfo.equalsIgnoreCase("")) ? "" : "\n**Other Info:**\n" + otherInfo);
     }
 }

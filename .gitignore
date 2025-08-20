@@ -47,3 +47,5 @@ bin/
 /exalted.db
 /book.db
 data/
+/java/me/spider/db/book/Updater.java
+java/me/spider/db/book/Updater.java

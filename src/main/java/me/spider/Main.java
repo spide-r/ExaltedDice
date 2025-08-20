@@ -33,6 +33,7 @@ public class Main {
         try {
             roller = new Roller();
             bookManager = new BookManager();
+            //Updater.update();
 
             CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
             commandClientBuilder.setOwnerId(102845358677176320L);

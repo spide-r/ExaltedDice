@@ -3,23 +3,21 @@ package me.spider.db.book;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "hearthstones")
-public class Hearthstone extends BookPage {
+@DatabaseTable(tableName = "knacks")
+public class Knack extends BookPage {
     @DatabaseField(defaultValue = "unknown", id = true)
     private String name;
     @DatabaseField
-    private String aspect;
-    @DatabaseField
-    private int level;
+    private String type;
     @DatabaseField
     private String description;
 
-    public Hearthstone() {
+    public Knack() {
     }
 
     @Override
     public String getFancyText() {
-        return "### " + name + "\n**Aspect:** " + aspect + "\n**Level:** " + level + "\n" + description;
+        return "### " + name + "\n**Type:** " + type + "\n" + description;
     }
 
     public String getName() {
@@ -30,20 +28,12 @@ public class Hearthstone extends BookPage {
         this.name = name;
     }
 
-    public String getAspect() {
-        return aspect;
+    public String getType() {
+        return type;
     }
 
-    public void setAspect(String aspect) {
-        this.aspect = aspect;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDescription() {

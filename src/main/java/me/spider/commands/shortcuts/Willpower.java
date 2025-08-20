@@ -26,7 +26,7 @@ public class Willpower extends SlashCommand {
         ServerConfiguration c = Main.cc.getSettingsFor(event.getGuild());
         Character ch = c.getCharacter(event.getUser().getId());
         try {
-            if(restore){
+            if(!restore){
                 amount = amount * -1;
             }
             ch.setWillpower(ch.getWillpower() + amount);
