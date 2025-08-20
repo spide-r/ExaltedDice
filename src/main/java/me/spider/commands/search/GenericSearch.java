@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
-
+//todo: I forgot: Submodules, Knacks, Other Exalt Ox-bodies, **ALL** of the DB charms
 public class GenericSearch extends SlashCommand {
     public GenericSearch(String toSearch){
         this.name = toSearch;
@@ -33,13 +33,16 @@ public class GenericSearch extends SlashCommand {
                     String t = s.substring(0, 1950) + "**[Description cut to fit Discord's limits]**";
                     event.reply(t).setEphemeral(true).queue();
                 } else {
-                    event.reply(s.substring(0, 1999)).queue(suc -> {
-                        int tracker = 1999;
+                    int space = s.substring(0, 1999).lastIndexOf('.')+1;
+                    event.reply(s.substring(0, space)).queue(suc -> {
+                        int tracker = space;
                         while (tracker < s.length()){
                             int startPoint = tracker;
                             int endPoint = Math.min(s.length() - tracker, 1999);
-                            tracker += endPoint;
-                            event.getChannel().sendMessage(s.substring(startPoint, startPoint+endPoint)).queue();
+                            int space2 = s.substring(startPoint, endPoint+startPoint).lastIndexOf('.')+1;
+                            tracker += space2;
+
+                            event.getChannel().sendMessage(s.substring(startPoint, startPoint+space2)).queue();
                         }
                     });
 
