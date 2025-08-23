@@ -17,8 +17,11 @@ public class Search extends SlashCommand {
                 new GenericSearch("sorcery"),
                 new GenericSearch("excellencies"),
                 new GenericSearch("knacks"),
-                new GenericSearch("submodules")
+                new GenericSearch("submodules"),
+                new AdvancedCharmSearch(),
+                new AdvancedMartsSearch()
         };
+
     }
     @Override
     protected void execute(SlashCommandEvent event) {

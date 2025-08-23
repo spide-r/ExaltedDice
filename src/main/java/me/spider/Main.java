@@ -8,9 +8,9 @@ import me.spider.commands.Help;
 import me.spider.commands.combat.CombatCmd;
 import me.spider.commands.funny.BlowOnDice;
 import me.spider.commands.funny.Probability;
-import me.spider.commands.health.TakeDamage;
 import me.spider.commands.health.Heal;
 import me.spider.commands.health.SetHealthLevels;
+import me.spider.commands.health.TakeDamage;
 import me.spider.commands.search.Search;
 import me.spider.commands.sheets.Sheet;
 import me.spider.commands.shortcuts.*;
@@ -33,7 +33,7 @@ public class Main {
         try {
             roller = new Roller();
             bookManager = new BookManager();
-            //Updater.update();
+            //.Updater.update();
 
             CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
             commandClientBuilder.setOwnerId(102845358677176320L);

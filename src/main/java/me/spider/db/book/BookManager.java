@@ -10,6 +10,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 
 public class BookManager {
     private final ConnectionSource connection;
@@ -35,6 +36,9 @@ public class BookManager {
     private final HashSet<String> knackKeys = new HashSet<>();
     private final HashSet<String> submoduleKeys = new HashSet<>();
     private final HashSet<String> excellencyKeys = new HashSet<>();
+    private final HashSet<String> charmSubsections = new HashSet<>();
+    private final HashSet<String> charmCategories = new HashSet<>();
+    private final HashSet<String> styles = new HashSet<>();
 
     public BookManager(){
         try {
@@ -67,7 +71,19 @@ public class BookManager {
             throw new RuntimeException(e);
         }
     }
+    public List<String> getMarts(String style) throws SQLException {
+        style = "%" + style + "%";
+        return martialArtsDao.queryBuilder().where().raw("LOWER(style) LIKE ?", new SelectArg(SqlType.STRING, style.toLowerCase())).query().stream().map(MartialArts::getName).toList();
 
+    }
+
+    public List<String> getCharms(String category, String subsection) throws SQLException {
+        category = "%" + category + "%";
+        subsection = "%" + subsection + "%";
+        return charmDao.queryBuilder().where().raw("LOWER(category) LIKE ? AND LOWER(subsection) LIKE ?",
+                new SelectArg(SqlType.STRING, category.toLowerCase()),new SelectArg(SqlType.STRING, subsection.toLowerCase())).query().stream().map(Charm::getName).toList();
+
+    }
     public BookPage getPage(String name, String toSearch) throws SQLException {
         toSearch = "%" + toSearch + "%";
         return switch (name.toLowerCase()) {
@@ -85,7 +101,6 @@ public class BookManager {
         };
     }
 
-
     public HashSet<String> getKeys(String name) throws SQLException {
         return switch (name.toLowerCase()) {
             case "anima" -> animaKeys;
@@ -98,6 +113,9 @@ public class BookManager {
             case "knack", "knacks" -> knackKeys;
             case "submodule", "submodules" -> submoduleKeys;
             case "excellencies", "excellency" -> excellencyKeys;
+            case "styles" -> styles;
+            case "charmsubsections"->charmSubsections;
+            case "charmcategories"->charmCategories;
             default -> null;
         };
     }
@@ -105,10 +123,18 @@ public class BookManager {
     public void loadKeys() throws SQLException {
         animaDao.queryForAll().forEach( a -> animaKeys.add(a.getCaste()));
         astrologyDao.queryForAll().forEach( a -> astrologyKeys.add(a.getName()));
-        charmDao.queryForAll().forEach( c -> charmKeys.add(c.getName()));
+        charmDao.queryForAll().forEach( c ->
+        {
+            charmKeys.add(c.getName());
+            charmSubsections.add(c.getSubsection());
+            charmCategories.add(c.getCategory());
+        });
         equipmentDao.queryForAll().forEach( e -> equipmentKeys.add(e.getName()));
         hearthstoneDao.queryForAll().forEach( h -> hearthstoneKeys.add(h.getName()));
-        martialArtsDao.queryForAll().forEach( m -> martsKeys.add(m.getName()));
+        martialArtsDao.queryForAll().forEach( m -> {
+            martsKeys.add(m.getName());
+            styles.add(m.getStyle());
+        });
         sorceryDao.queryForAll().forEach( s -> sorceryKeys.add(s.getName()));
         knackDao.queryForAll().forEach( s -> knackKeys.add(s.getName()));
         excellencyDao.queryForAll().forEach( s -> excellencyKeys.add(s.getName()));
@@ -121,6 +147,7 @@ public class BookManager {
     public Dao<AstrologyCollege, String> getAstrologyDao() {
         return astrologyDao;
     }
+
 
     public Dao<Charm, String> getCharmDao() {
         return charmDao;
