@@ -40,6 +40,9 @@ public class GenericRoll {
         });
 
         String rolls = builder.toString();
+        if(rolls.isEmpty()){
+            return "";
+        }
         rolls = rolls.substring(0, rolls.length()-2);
         return rolls;
     }
@@ -61,6 +64,9 @@ public class GenericRoll {
         }
 
         String rolls = builder.toString();
+        if(rolls.isEmpty()){
+            return "";
+        }
         rolls = rolls.substring(0, rolls.length()-2);
         return rolls;
     }
