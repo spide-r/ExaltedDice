@@ -275,6 +275,22 @@ public class Combat {
         writeJSON();
     }
 
+    public void removeFromJoinCombat(String actor){
+        HashSet<Integer> ticksToRemove = new HashSet<>();
+        getJoinCombat().forEach((success, hashSet) -> {
+            hashSet.remove(actor);
+            if(hashSet.isEmpty()){
+                ticksToRemove.add(success); //if ticks are empty after actor removal - no need to save this tick since nothing happens
+            }
+        });
+
+        ticksToRemove.forEach(t -> {
+            getJoinCombat().remove(t);
+        });
+
+        writeJSON();
+    }
+
     public String getActorsAt(int tick){
         if(isStartOfCombat()){
             return "Combat has not started! Did you mean to run `/combat ready`?";

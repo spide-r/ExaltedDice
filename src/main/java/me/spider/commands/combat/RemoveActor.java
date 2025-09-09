@@ -30,7 +30,12 @@ public class RemoveActor extends SlashCommand {
             name = name.substring(2, name.length()-1);
         }
         Combat combat = sc.getCombat(event.getChannelId());
-        combat.removeFromCombat(name);
+        if(combat.isStartOfCombat()){
+            combat.removeFromJoinCombat(name);
+        } else {
+            combat.removeFromCombat(name);
+
+        }
         try {
             if(name.matches("\\d+")){
                 event.reply("<@" + name + "> removed from combat." ).queue();
