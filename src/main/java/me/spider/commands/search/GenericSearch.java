@@ -25,7 +25,7 @@
             boolean hide = event.getOption("hide", false, OptionMapping::getAsBoolean);
 
             try {
-                String s = Main.bookManager.getPage(this.name, toSearch).getFancyText();
+                String s = Main.bookManager.getPage(this.name, toSearch).getFancyText().trim();
                 if(s.length() > 2000){
                     if(hide){
                         String t = s.substring(0, 1950) + "**[Description cut to fit Discord's limits]**";
@@ -39,8 +39,11 @@
                                 int endPoint = Math.min(s.length() - tracker, 1999);
                                 int space2 = s.substring(startPoint, endPoint+startPoint).lastIndexOf('.')+1;
                                 tracker += space2;
+                                String toSend = s.substring(startPoint, startPoint+space2);
+                                if(!toSend.isEmpty()){
+                                    event.getChannel().sendMessage(toSend).queue();
 
-                                event.getChannel().sendMessage(s.substring(startPoint, startPoint+space2)).queue();
+                                }
                             }
                         });
 

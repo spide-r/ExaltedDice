@@ -16,6 +16,7 @@ import me.spider.commands.sheets.Sheet;
 import me.spider.commands.shortcuts.*;
 import me.spider.db.ServerConfigurationManager;
 import me.spider.db.book.BookManager;
+import me.spider.db.book.Updater;
 import me.spider.dice.Roller;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -33,7 +34,7 @@ public class Main {
         try {
             roller = new Roller();
             bookManager = new BookManager();
-            //.Updater.update();
+            //Updater.update();
 
             CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
             commandClientBuilder.setOwnerId(102845358677176320L);

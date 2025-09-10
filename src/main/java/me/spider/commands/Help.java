@@ -19,6 +19,7 @@ public class Help extends SlashCommand {
                 - Manage a bit of your character's attributes. (Type **/sheet help**)
                 - Manage your health levels! (Use **/sheet health, /sethealthlevels, /takedamage, /heal**)
                 - Search 2.5 charms, sorcery, astrology, anima effects, hearthstones, martial arts, and equipment! **/search**
+                    - Thank you to Gretchen for making the search function possible.
                 - Some Shortcuts:
                     - /essence - Shows your essence.
                     - /limit - Manage your limit

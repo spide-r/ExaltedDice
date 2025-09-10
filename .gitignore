@@ -45,7 +45,8 @@ bin/
 .idea
 /.idea/
 /exalted.db
+/book-old.db
 /book.db
 data/
 /java/me/spider/db/book/Updater.java
-java/me/spider/db/book/Updater.java
+/src/main/java/me/spider/db/book/Updater.java
