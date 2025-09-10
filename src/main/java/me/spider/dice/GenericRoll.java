@@ -31,7 +31,7 @@ public class GenericRoll {
         StringBuilder builder = new StringBuilder();
         dice.forEach( die -> {
             boolean success = die.success();
-            boolean doubleSuccess = die.doubleSuccess();
+            boolean doubleSuccess = !tensAreOneHit && die.doubleSuccess();
             builder.append((doubleSuccess) ? "__" : "")
                     .append((success) ? "**" : "")
                     .append(die.getValue()).append((success) ? "**" : "")
