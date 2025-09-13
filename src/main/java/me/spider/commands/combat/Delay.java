@@ -73,25 +73,24 @@ public class Delay extends SlashCommand {
 
         Combat combat = sc.getCombat(event.getChannelId());
 
-        options = combat.getAllActors().stream().filter(w -> w.toLowerCase().contains(event.getFocusedOption().getName().toLowerCase()))
-                .map(w -> {
-
-                    if(w.length() > 100){
-                        w = w.substring(0, 99);
+        options = combat.getAllActors().stream().map(w -> {
+            if(w.length() > 100){
+                w = w.substring(0, 99);
+            }
+            String key = w;
+            String value = w;
+            if(w.matches("\\d+")){
+                if(event.getGuild() != null){
+                    Member m = event.getGuild().getMember(UserSnowflake.fromId(w));
+                    if(m != null){
+                        key = m.getEffectiveName();
                     }
-                    String key = w;
-                    String value = w;
-                    if(w.matches("\\d+")){
-                        if(event.getGuild() != null){
-                            Member m = event.getGuild().getMember(UserSnowflake.fromId(w));
-                            if(m != null){
-                                key = m.getEffectiveName();
-                            }
-                        }
-                    }
-                    return new Command.Choice(key, value);
+                }
+            }
+            return new Command.Choice(key, value);
 
-                }).collect(Collectors.toList());
+        }).collect(Collectors.toList());
+        options = options.stream().filter(c -> c.getName().toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase())).toList();
         if(options.size() > 25){
             options = options.subList(0,24);
         }

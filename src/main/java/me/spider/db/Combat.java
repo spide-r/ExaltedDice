@@ -183,6 +183,7 @@ public class Combat {
 
     public int delay(int amount, String actor){
         int actionTick = amount + currentTick;
+        removeFromCombat(actor); // remove from future ticks so that only 1 entity exists after multi-delaying
         addToTick(actionTick, actor);
         return actionTick;
     }
