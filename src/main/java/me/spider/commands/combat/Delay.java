@@ -73,7 +73,7 @@ public class Delay extends SlashCommand {
 
         Combat combat = sc.getCombat(event.getChannelId());
 
-        options = combat.getAllActors().stream().filter(w -> w.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+        options = combat.getAllActors().stream().filter(w -> w.toLowerCase().contains(event.getFocusedOption().getName().toLowerCase()))
                 .map(w -> {
 
                     if(w.length() > 100){

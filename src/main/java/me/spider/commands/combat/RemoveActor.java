@@ -66,7 +66,7 @@ public class RemoveActor extends SlashCommand {
 
         Combat combat = sc.getCombat(event.getChannelId());
 
-        options = combat.getAllActors().stream().filter(w -> w.toLowerCase().contains(event.getFocusedOption().getValue().toLowerCase()))
+        options = combat.getAllActors().stream().filter(w -> w.toLowerCase().contains(event.getFocusedOption().getName().toLowerCase()))
                 .map(w -> {
                     if(w.length() > 100){
                         w = w.substring(0, 99);
