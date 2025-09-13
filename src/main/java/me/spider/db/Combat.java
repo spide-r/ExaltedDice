@@ -29,6 +29,7 @@ public class Combat {
     private TreeMap<Integer, HashSet<String>> tickList = null;
     private TreeMap<Integer, HashSet<String>> joinCombat = null;
 
+    //todo some commands save combat while some just let this class deal with it - need to fix
     public Combat(){
 
     }
@@ -161,8 +162,11 @@ public class Combat {
         startOfCombat = true;
         currentTick = 0;
         highestSuccess = 0;
-        getTickList().clear();
-        getJoinCombat().clear();
+        getTickList();
+        getJoinCombat();
+        this.tickList.clear();
+        this.joinCombat.clear();
+        writeJSON();
     }
 
     public void tickZero(){
@@ -174,6 +178,7 @@ public class Combat {
             int tick = Math.min(6, highestSuccess - successes);
             setParticipants(tick, value, getTickList());
         });
+        this.joinCombat.clear();
     }
 
     public int delay(int amount, String actor){
@@ -211,6 +216,14 @@ public class Combat {
             return aa;
         }));
         return actorsAndTicks;
+    }
+
+    public HashSet<String> getAllActors(){
+        HashSet<String> actors = new HashSet<>();
+        getTickList().tailMap(currentTick).forEach((t, a) -> {
+            actors.addAll(a);
+        });
+        return actors;
     }
 
     public boolean joinCombat(String actor, int successes){

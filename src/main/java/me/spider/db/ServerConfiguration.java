@@ -14,6 +14,7 @@ public class ServerConfiguration {
     Dao<Combat, String> combatDao;
     Logger LOG = LoggerFactory.getLogger(ServerConfiguration.class);
 
+    //todo split this class into one that just does the guild stuff and one that does the db stuff - dao's can be static
     public ServerConfiguration(String serverID, ConnectionSource connection){
         this.serverID = serverID;
         try {
@@ -51,7 +52,6 @@ public class ServerConfiguration {
             return new Combat(channelID);
         }
     }
-
 
     public boolean isCombatInactive(String channelID) {
         try {
