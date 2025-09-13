@@ -47,7 +47,7 @@ public class Main {
             cc = commandClientBuilder.build();
 
             String TOKEN = new BufferedReader(new FileReader(".TOKEN")).readLine().trim();
-            JDABuilder.createDefault(TOKEN, GatewayIntent.GUILD_WEBHOOKS, GatewayIntent.DIRECT_MESSAGES)
+            JDABuilder.createDefault(TOKEN, GatewayIntent.GUILD_WEBHOOKS, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MEMBERS)
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS)
                     .addEventListeners(new BotEventListener(), cc)
                     .build();
