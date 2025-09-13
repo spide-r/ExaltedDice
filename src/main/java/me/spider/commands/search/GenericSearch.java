@@ -8,11 +8,16 @@
     import net.dv8tion.jda.api.interactions.commands.OptionMapping;
     import net.dv8tion.jda.api.interactions.commands.OptionType;
     import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+    import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
 
     import java.sql.SQLException;
     import java.util.List;
     import java.util.stream.Collectors;
+
     public class GenericSearch extends SlashCommand {
+        Logger LOG = LoggerFactory.getLogger(GenericSearch.class);
+
         public GenericSearch(String toSearch){
             this.name = toSearch;
             this.help = "Searches for a specified " + toSearch;
@@ -41,7 +46,11 @@
                                 tracker += space2;
                                 String toSend = s.substring(startPoint, startPoint+space2);
                                 if(!toSend.isEmpty()){
-                                    event.getChannel().sendMessage(toSend).queue();
+                                    event.getChannel().sendMessage(toSend).queue(m -> {
+                                        LOG.info("Sent message: {}", m.getId());
+                                    }, e -> {
+                                        LOG.error("Issue sending message.", e);
+                                    });
 
                                 }
                             }

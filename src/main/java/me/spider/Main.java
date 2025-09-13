@@ -32,6 +32,8 @@ public class Main {
     public static CommandClient cc;
     public static void main(String[] args) {
         try {
+            //todo lunar charms dont have domino rules - maybe think of a toggle?
+
             roller = new Roller();
             bookManager = new BookManager();
             //Updater.update();
