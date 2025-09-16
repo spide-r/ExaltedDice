@@ -30,7 +30,7 @@ public class JoinCombat extends SlashCommand {
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString).trim();
         String label = event.getOption("label", "Join Battle", OptionMapping::getAsString).trim();
         ServerConfiguration sc = Main.cc.getSettingsFor(event.getGuild());
-        if(!sc.isCombatInactive(event.getChannelId())){
+        if(!sc.isCombatActive(event.getChannelId())){
             event.reply("Combat has not started!").queue();
             return;
         }

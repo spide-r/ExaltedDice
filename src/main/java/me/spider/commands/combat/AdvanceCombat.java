@@ -18,7 +18,7 @@ public class AdvanceCombat extends SlashCommand {
     protected void execute(SlashCommandEvent event) {
         ServerConfiguration sc = Main.cc.getSettingsFor(event.getGuild());
         Combat combat = sc.getCombat(event.getChannelId());
-        if(!sc.isCombatInactive(event.getChannelId())){
+        if(!sc.isCombatActive(event.getChannelId())){
             event.reply("Combat has not started!").queue();
             return;
         }

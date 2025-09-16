@@ -53,7 +53,7 @@ public class ServerConfiguration {
         }
     }
 
-    public boolean isCombatInactive(String channelID) {
+    public boolean isCombatActive(String channelID) {
         try {
             return combatDao.queryForId(channelID) != null;
         } catch (SQLException e) {

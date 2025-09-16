@@ -25,8 +25,9 @@ public class AddToTick extends SlashCommand {
         String name = event.getOption("name", event.getUser().getId(), OptionMapping::getAsString);
         int tick = event.getOption("tick", Constants.DEFAULT_TICK, OptionMapping::getAsInt);
         ServerConfiguration sc = Main.cc.getSettingsFor(event.getGuild());
-        if(sc.isCombatInactive(event.getChannelId())){
+        if(!sc.isCombatActive(event.getChannelId())){
             event.reply("Combat has not started!").queue();
+            return;
         }
 
         try {
