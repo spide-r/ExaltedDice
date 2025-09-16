@@ -22,6 +22,7 @@ import me.spider.dice.Roller;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.io.BufferedReader;
@@ -49,6 +50,7 @@ public class Main {
 
             String TOKEN = new BufferedReader(new FileReader(".TOKEN")).readLine().trim();
             JDABuilder.createDefault(TOKEN, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MEMBERS)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS)
                     .addEventListeners(new BotEventListener(), cc)
                     .build();
