@@ -2,10 +2,7 @@ package me.spider;
 
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
-import me.spider.commands.CheckPerms;
-import me.spider.commands.Damage;
-import me.spider.commands.DiceRoll;
-import me.spider.commands.Help;
+import me.spider.commands.*;
 import me.spider.commands.combat.CombatCmd;
 import me.spider.commands.funny.BlowOnDice;
 import me.spider.commands.funny.Probability;
@@ -44,12 +41,12 @@ public class Main {
             commandClientBuilder.setOwnerId(102845358677176320L);
             commandClientBuilder.setActivity(Activity.customStatus("Type /help!"));
             commandClientBuilder.addSlashCommands(new Help(), new DiceRoll(), new Damage(), new BlowOnDice(), new Probability(), new CombatCmd(), new Sheet(), new CheckPerms(),
-            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence(), new SetHealthLevels(), new Heal(), new TakeDamage(), new Limit(), new Willpower(), new Search());
+            new Recover(), new Spend(), new Stunt(), new Refresh(), new Essence(), new SetHealthLevels(), new Heal(), new TakeDamage(), new Limit(), new Willpower(), new Search(), new Wordcount());
             commandClientBuilder.setGuildSettingsManager(new ServerConfigurationManager());
             cc = commandClientBuilder.build();
 
             String TOKEN = new BufferedReader(new FileReader(".TOKEN")).readLine().trim();
-            JDABuilder.createDefault(TOKEN, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MEMBERS)
+            JDABuilder.createDefault(TOKEN, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.CLIENT_STATUS, CacheFlag.ONLINE_STATUS)
                     .addEventListeners(new BotEventListener(), cc)
