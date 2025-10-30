@@ -28,4 +28,19 @@ public class Constants {
         return false;
     }
 
+    public static int getDelimiter(String s){
+        int d = s.lastIndexOf('.')+1;
+
+        if(d == 0){ // no . exists
+            d = s.lastIndexOf('\n')+1;
+        }
+        if(d == 0){ // no \n exists
+            d = s.lastIndexOf(' ')+1;
+        }
+        if(d == 0){ // no space exists
+            d = s.length();
+        }
+        return d;
+    }
+
 }

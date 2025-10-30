@@ -2,6 +2,7 @@
 
     import com.jagrosh.jdautilities.command.SlashCommand;
     import com.jagrosh.jdautilities.command.SlashCommandEvent;
+    import me.spider.Constants;
     import me.spider.Main;
     import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
     import net.dv8tion.jda.api.interactions.commands.Command;
@@ -36,13 +37,13 @@
                         String t = s.substring(0, 1950) + "**[Description cut to fit Discord's limits]**";
                         event.reply(t).setEphemeral(true).queue();
                     } else {
-                        int space = s.substring(0, 1999).lastIndexOf('.')+1;
+                        int space = Constants.getDelimiter(s.substring(0, 1999));
                         event.reply(s.substring(0, space)).queue(suc -> {
                             int tracker = space;
                             while (tracker < s.length()){
                                 int startPoint = tracker;
                                 int endPoint = Math.min(s.length() - tracker, 1999);
-                                int space2 = s.substring(startPoint, endPoint+startPoint).lastIndexOf('.')+1;
+                                int space2 = Constants.getDelimiter(s.substring(startPoint, endPoint+startPoint));
                                 tracker += space2;
                                 String toSend = s.substring(startPoint, startPoint+space2);
                                 if(!toSend.isEmpty()){
